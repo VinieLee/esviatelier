@@ -504,16 +504,18 @@
 
                 document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
                     const selectedSize = document.querySelector('input[name="size"]:checked');
-                    const selectedColor = document.querySelector('input[name="color"]:checked');
-                    if (!selectedSize || !selectedColor) {
+                    // Changed: No longer require color selection for adding to cart
+                    const selectedColor = document.querySelector('input[name="color"]:checked'); // Still capture if selected
+
+                    if (!selectedSize) { // Only check for size
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
-                        messageBox.textContent = 'Por favor, selecciona talla y color.';
+                        messageBox.textContent = 'Por favor, selecciona una talla.'; // Updated message
                         e.target.parentNode.insertBefore(messageBox, e.target);
                         setTimeout(() => messageBox.remove(), 3000);
                         return;
                     }
-                    addToCart(product.id, selectedSize.value, selectedColor.value);
+                    addToCart(product.id, selectedSize.value, selectedColor ? selectedColor.value : 'No especificado'); // Pass 'No especificado' if no color is selected
                     productModal.classList.add('opacity-0', 'pointer-events-none');
                     productModalContent.classList.add('scale-95');
                     openCartPanel();
@@ -537,7 +539,7 @@
                             <img src="${product.image}" alt="${product.name}" class="w-20 h-24 object-cover rounded-lg">
                             <div class="flex-grow">
                                 <h4 class="font-bold">${product.name}</h4>
-                                <p class="text-sm text-gray-500">Talla: ${item.size}, Color: ${item.color}</p>
+                                <p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p>
                                 <p class="font-bold text-lg">S/ ${(product.price * item.quantity).toFixed(2)}</p>
                             </div>
                             <div class="flex flex-col items-center justify-between">
@@ -680,7 +682,7 @@
                                  <div class="space-y-4">
                                     ${appState.cart.map(item => {
                                         const product = appState.products.find(p => p.id === item.id);
-                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">${item.size}, ${item.color}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
+                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
                                     }).join('')}
                                 </div>
                             </div>
@@ -698,7 +700,7 @@
                 } else if (step === 3) { // Pago
                     const productDescriptions = appState.cart.map(item => {
                         const product = appState.products.find(p => p.id === item.id);
-                        return `${item.quantity} x ${product.name} (Talla: ${item.size}, Color: ${item.color}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
+                        return `${item.quantity} x ${product.name} (Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
                     }).join(', ');
 
                     const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
