@@ -1,4 +1,4 @@
-<!DOCTYPE html>More actions
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -8,10 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Adaptable (Blanco Roto, Gris Carbón, Verde Oliva Sutil, Escalas de Azules, Beige, Colores Suaves para Infantil) -->
-    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo un campo para número de pago, fecha y hora, que serán enviados a una Google Sheet. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
-    <!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y campos de corroboración -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campos de texto para número de pago, fecha y hora, que serán enviados a una Google Sheet. Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Lato', sans-serif;
@@ -89,7 +85,7 @@
             <!-- El contenido se inyecta dinámicamente -->
         </div>
     </div>
-
+    
     <!-- PANEL LATERAL DEL CARRITO -->
     <div id="cart-panel" class="cart-panel fixed top-0 right-0 h-full w-full md:w-1/3 lg:w-1/4 bg-white shadow-2xl z-50 transform translate-x-full">
         <div class="flex flex-col h-full">
@@ -111,8 +107,8 @@
             </div>
         </div>
     </div>
-
-    <!-- MODAL DE CHECKOUT -->
+    
+    <!-- MODAL DE CHECKOUT (Manteniendo la estructura básica, pero sin funcionalidad de envío a Google Sheet en esta versión) -->
     <div id="checkout-modal" class="checkout-modal fixed inset-0 bg-white z-50 opacity-0 pointer-events-none overflow-y-auto">
         <div id="checkout-modal-content" class="container mx-auto px-4 py-8">
              <!-- El contenido del checkout se inyecta dinámicamente -->
@@ -191,8 +187,8 @@
                                 <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="XL"><span>XL</span></label>
                             </div>
                         </div>
-                        <!-- Color -->
-                        <div>
+                        <!-- Color (removido para selección en esta versión, mantenido solo como metadata) -->
+                        <!-- <div>
                             <h3 class="font-bold mb-2">Color</h3>
                             <div class="flex flex-wrap gap-2">
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Negro"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-black cursor-pointer"></span></label>
@@ -201,8 +197,10 @@
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Rojo"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-red-600 cursor-pointer"></span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Verde"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-green-600 cursor-pointer"></span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Beige"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-amber-200 cursor-pointer"></span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Gris"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-gray-500 cursor-pointer"></span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Amarillo"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-yellow-400 cursor-pointer"></span></label>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- Precio -->
                         <div>
                             <h3 class="font-bold mb-2">Precio</h3>
@@ -220,6 +218,12 @@
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Polo"><span> Polos</span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Conjunto"><span> Conjuntos</span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Falda"><span> Faldas</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Chaqueta"><span> Chaquetas</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Short"><span> Shorts</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Blusa"><span> Blusas</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Chaleco"><span> Chalecos</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Zapatillas"><span> Zapatillas</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Gorra"><span> Gorras</span></label>
                             </div>
                         </div>
                         <button id="clear-filters-btn" class="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition-colors">Limpiar Filtros</button>
@@ -239,7 +243,7 @@
                 </section>
             </div>
         </main>
-
+        
         <!-- PIE DE PÁGINA -->
         <footer class="mt-16 py-10 border-t border-gray-200 text-center text-gray-500">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -282,9 +286,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT !
-            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwFXMU31VVMeZMP5qs7FXVUUuy-M8a-17TJLQur9ubsBYr7G60Bo6iwQw0NyVt1JwE/exec';
-           
+            // ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT UNA VEZ DESPLEGADA !
+            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwFXMU31VVMeZMP5qs7FXVUUuy-M8a-17TJLQur9ubsBYr7G60Bo6iwQw0NyVt1JwE/exec'; // URL actualizada
 
             const appState = {
                 products: [],
@@ -292,45 +295,60 @@
                 filters: {
                     category: 'Todos',
                     talla: [],
-                    color: [],
+                    color: [], // Se mantiene la propiedad 'color' para filtros si se desea reintroducir la UI de filtro más tarde
                     tipo: [],
                     maxPrice: 500,
                     searchTerm: ''
                 },
                 currentView: 'home', // 'home' or 'catalog'
                 checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
-                // Datos del comprador (ejemplo, en una app real se recopilarían de los campos del formulario)
                 customerInfo: {
-                    fullName: '',
-                    email: '',
-                    address: '',
+                    fullName: '', // Se mapeará a clientName
+                    lastName: '', // Se mapeará a clientLastname
+                    dni: '', // Se mapeará a clientDNI
+                    phone: '', // Se mapeará a clientPhone
+                    email: '', // Se mapeará a clientEmail
+                    address: '', // Se mapeará a shippingAddress
+                    reference: '', // Se mapeará a addressReference
                     city: '',
                     zipCode: '',
-                    phone: '',
-                    dni: '', // Added DNI
-                    pickupName: '',
-                    pickupEmail: ''
+                    // pickupName y pickupEmail ya no se envían al Apps Script si no están en los encabezados
+                    // paymentMethod se moverá directamente al customer object para el envío
                 },
                 paymentInfo: {
                     paymentMethod: '',
                     paymentNumber: '',
-                    paymentDate: '',
-                    paymentTime: ''
+                    orderDate: '',
+                    orderTime: ''
                 }
             };
 
             const mockProducts = [
+                // Hombre (5 productos)
                 { id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino+Hombre', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
                 { id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino+Hombre', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
+                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
+                { id: 10, name: 'Chaqueta de Mezclilla Casual', category: 'Hombre', tipo: 'Chaqueta', price: 249.90, sizes: ['M', 'L', 'XL'], colors: ['Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/A0D6B4/333?text=Chaqueta+Mezclilla', novelty: false, onSale: true, description: 'Una chaqueta atemporal para un estilo casual y relajado.'},
+                { id: 11, name: 'Short Bermuda Estampado', category: 'Hombre', tipo: 'Short', price: 99.90, sizes: ['S', 'M', 'L'], colors: ['Azul', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/B2D3C2/333?text=Short+Bermuda+Hombre', novelty: true, onSale: false, description: 'Short cómodo y con estilo para los días de verano.'},
+
+                // Mujer (5 productos)
                 { id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XS', 'S', 'M'], colors: ['Beige', 'Blanco'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral+Mujer', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
                 { id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['M', 'L'], colors: ['Beige', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca+Mujer', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
-                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
                 { id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['S', 'M'], colors: ['Beige', 'Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny+Mujer', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
-                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
                 { id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['S', 'M', 'L'], colors: ['Negro', 'Beige'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi+Mujer', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'},
-                { id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['XS', 'S', 'M'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'}
-            ];
+                { id: 12, name: 'Blusa de Seda Elegante', category: 'Mujer', tipo: 'Blusa', price: 165.00, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Negro', 'Rojo'], material: 'Seda', inStock: true, image: 'https://placehold.co/400x500/F8D8C2/333?text=Blusa+Seda+Mujer', novelty: true, onSale: false, description: 'Una blusa sofisticada para ocasiones especiales o un look de oficina.'},
 
+                // Infantil (5 productos)
+                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
+                { id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['XS', 'S', 'M'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'},
+                { id: 13, name: 'Chaleco Acolchado Infantil', category: 'Infantil', tipo: 'Chaleco', price: 85.00, sizes: ['XS', 'S', 'M'], colors: ['Azul', 'Verde'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/D0F0C0/333?text=Chaleco+Infantil', novelty: true, onSale: false, description: 'Chaleco ligero y cálido, ideal para el entretiempo.'},
+                { id: 14, name: 'Zapatillas Deportivas Infantil', category: 'Infantil', tipo: 'Zapatillas', price: 110.00, sizes: ['25', '28', '31'], colors: ['Rojo', 'Azul'], material: 'Sintético', inStock: true, image: 'https://placehold.co/400x500/C0E0F0/333?text=Zapatillas+Infantil', novelty: false, onSale: true, description: 'Zapatillas cómodas y duraderas para las aventuras de los niños.'},
+                { id: 15, name: 'Gorra de Sol Infantil', category: 'Infantil', tipo: 'Gorra', price: 45.00, sizes: ['Única'], colors: ['Amarillo', 'Rojo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/F0F0D0/333?text=Gorra+Infantil', novelty: false, onSale: true, description: 'Protege del sol con estilo.'},
+
+                // Productos adicionales para asegurar al menos 5 en Ofertas/Novedades
+                // (Ya cubierto por los que ya están y los nuevos marcados como onSale/novelty)
+            ];
+            
             appState.products = mockProducts;
 
             const productGrid = document.getElementById('product-grid');
@@ -344,7 +362,7 @@
             const mainContent = document.getElementById('main-content');
             const exploreCatalogBtn = document.getElementById('explore-catalog-btn');
             const bodyElement = document.body;
-
+            
             const productModal = document.getElementById('product-modal');
             const productModalContent = document.getElementById('product-modal-content');
 
@@ -358,7 +376,7 @@
             const checkoutBtn = document.getElementById('checkout-btn');
             const checkoutModal = document.getElementById('checkout-modal');
             const checkoutModalContent = document.getElementById('checkout-modal-content');
-
+            
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
 
@@ -416,11 +434,12 @@
                 if (appState.filters.talla.length > 0) {
                     filteredProducts = filteredProducts.filter(p => p.sizes.some(s => appState.filters.talla.includes(s)));
                 }
-
-                if (appState.filters.color.length > 0) {
-                    filteredProducts = filteredProducts.filter(p => p.colors.some(c => appState.filters.color.includes(c)));
-                }
-
+                
+                // El filtro de color se mantiene, pero la UI de selección de color en el modal fue eliminada
+                // if (appState.filters.color.length > 0) {
+                //     filteredProducts = filteredProducts.filter(p => p.colors.some(c => appState.filters.color.includes(c)));
+                // }
+                
                 if (appState.filters.tipo.length > 0) {
                     filteredProducts = filteredProducts.filter(p => appState.filters.tipo.includes(p.tipo));
                 }
@@ -456,12 +475,11 @@
                     });
                 }
             };
-
+            
             const openProductModal = (productId) => {
                 const product = appState.products.find(p => p.id == productId);
                 if (!product) return;
 
-                // Modificación: se elimina el `required` del campo de color y se ajusta la lógica.
                 productModalContent.innerHTML = `
                     <div class="flex flex-col md:flex-row h-full">
                         <div class="md:w-1/2 h-1/2 md:h-full bg-cover bg-center" style="background-image: url('${product.image}')"></div>
@@ -480,14 +498,52 @@
                                         ${product.sizes.map(size => `<label><input type="radio" name="size" value="${size}" class="sr-only peer"><span class="px-4 py-2 border rounded-lg cursor-pointer peer-checked:bg-gray-800 peer-checked:text-white">${size}</span></label>`).join('')}
                                     </div>
                                 </div>
-                                ${product.colors && product.colors.length > 0 ? `
+                                
+                                <!-- Sección de medidas internacionales de talla -->
                                 <div class="mb-6">
-                                    <h4 class="font-bold mb-2">Color:</h4>
-                                     <div class="flex flex-wrap gap-3">
-                                        ${product.colors.map(color => `<label><input type="radio" name="color" value="${color}" class="sr-only peer"><span class="h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-800 block cursor-pointer" style="background-color: ${color.toLowerCase() === 'blanco' ? 'white' : color.toLowerCase()}; border-color: ${color.toLowerCase() === 'blanco' ? '#ccc' : 'transparent'};"></span></label>`).join('')}
+                                    <h4 class="font-bold mb-2">Guía de Tallas (Medidas del Cuerpo en cm):</h4>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr>
+                                                    <th class="border px-4 py-2 bg-gray-100">Talla</th>
+                                                    <th class="border px-4 py-2 bg-gray-100">Pecho (cm)</th>
+                                                    <th class="border px-4 py-2 bg-gray-100">Cintura (cm)</th>
+                                                    <th class="border px-4 py-2 bg-gray-100">Cadera (cm)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="border px-4 py-2">S</td>
+                                                    <td class="border px-4 py-2">88-92</td>
+                                                    <td class="border px-4 py-2">72-76</td>
+                                                    <td class="border px-4 py-2">94-98</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border px-4 py-2">M</td>
+                                                    <td class="border px-4 py-2">96-100</td>
+                                                    <td class="border px-4 py-2">80-84</td>
+                                                    <td class="border px-4 py-2">102-106</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border px-4 py-2">L</td>
+                                                    <td class="border px-4 py-2">104-108</td>
+                                                    <td class="border px-4 py-2">88-92</td>
+                                                    <td class="border px-4 py-2">110-114</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border px-4 py-2">XL</td>
+                                                    <td class="border px-4 py-2">112-116</td>
+                                                    <td class="border px-4 py-2">96-100</td>
+                                                    <td class="border px-4 py-2">118-122</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
+                                    <p class="text-sm text-gray-600 mt-2">*Nota: Medidas del cuerpo. Las tallas pueden variar ligeramente.</p>
                                 </div>
-                                ` : ''}
+                                <!-- Fin de la sección de medidas internacionales de talla -->
+
                             </div>
                             <div class="mt-auto">
                                 <button data-product-id="${product.id}" class="add-to-cart-btn w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
@@ -497,7 +553,7 @@
                         </div>
                     </div>
                 `;
-
+                
                 productModal.classList.remove('opacity-0', 'pointer-events-none');
                 productModalContent.classList.remove('scale-95');
 
@@ -508,10 +564,10 @@
 
                 document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
                     const selectedSize = document.querySelector('input[name="size"]:checked');
-                    // Eliminado el 'required' para el color al añadir al carrito
-                    const selectedColor = document.querySelector('input[name="color"]:checked');
+                    // El color se establece como 'No aplicable' ya que la selección de color se ha eliminado
+                    const selectedColor = 'No aplicable'; 
 
-                    if (!selectedSize) { // Solo se valida la talla
+                    if (!selectedSize) { 
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
                         messageBox.textContent = 'Por favor, selecciona una talla.';
@@ -519,8 +575,7 @@
                         setTimeout(() => messageBox.remove(), 3000);
                         return;
                     }
-                    // Si no se selecciona color, se envía 'No especificado'
-                    addToCart(product.id, selectedSize.value, selectedColor ? selectedColor.value : 'No especificado');
+                    addToCart(product.id, selectedSize.value, selectedColor);
                     productModal.classList.add('opacity-0', 'pointer-events-none');
                     productModalContent.classList.add('scale-95');
                     openCartPanel();
@@ -544,7 +599,7 @@
                             <img src="${product.image}" alt="${product.name}" class="w-20 h-24 object-cover rounded-lg">
                             <div class="flex-grow">
                                 <h4 class="font-bold">${product.name}</h4>
-                                <p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p>
+                                <p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No aplicable' ? `, Color: ${item.color}` : ''}</p>
                                 <p class="font-bold text-lg">S/ ${(product.price * item.quantity).toFixed(2)}</p>
                             </div>
                             <div class="flex flex-col items-center justify-between">
@@ -575,7 +630,7 @@
                         id: productId,
                         quantity: 1,
                         size,
-                        color
+                        color // Siempre 'No aplicable' en esta versión
                     });
                 }
                 renderCart();
@@ -591,7 +646,8 @@
                 }
                 renderCart();
             };
-
+            
+            // Modified Checkout for this version with detailed fields and Apps Script integration
             const renderCheckout = (step = 1) => {
                 closeCartPanel();
                 let content = '';
@@ -599,7 +655,7 @@
                     const product = appState.products.find(p => p.id === item.id);
                     return sum + (product.price * item.quantity);
                 }, 0);
-                const shippingCost = appState.checkoutShippingMethod === 'delivery' ? 10 : 0; // S/10 for delivery, S/0 for pickup
+                const shippingCost = appState.checkoutShippingMethod === 'delivery' ? 10 : 0;
                 const total = subtotal + shippingCost;
 
                 if (step === 1) { // Información de Envío
@@ -626,15 +682,17 @@
 
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
                                     <div class="space-y-4">
-                                        <input type="text" id="shipping-fullName" placeholder="Nombre completo" value="${appState.customerInfo.fullName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-fullName" placeholder="Nombre" value="${appState.customerInfo.fullName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-lastName" placeholder="Apellidos" value="${appState.customerInfo.lastName}" class="w-full p-3 border rounded-lg" required>
                                         <input type="email" id="shipping-email" placeholder="Correo electrónico" value="${appState.customerInfo.email}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="text" id="shipping-address" placeholder="Dirección" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="tel" id="shipping-phone" placeholder="Celular (ej: 9XXXXXXXX)" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required pattern="[0-9]{9}">
+                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-address" placeholder="Dirección (Calle, Número)" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-reference" placeholder="Referencia (ej: A lado de la farmacia)" value="${appState.customerInfo.reference}" class="w-full p-3 border rounded-lg">
                                         <div class="flex gap-4">
                                             <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
                                             <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
                                         </div>
-                                        <input type="tel" id="shipping-phone" placeholder="Teléfono" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     ` : `
                                     <div class="space-y-4">
@@ -676,10 +734,10 @@
                                 <div class="bg-gray-50 p-6 rounded-lg mb-6">
                                     <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
-                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>DNI: ${appState.customerInfo.dni}<br>Teléfono: ${appState.customerInfo.phone}</p>
+                                        <p class="text-gray-600">${appState.customerInfo.fullName} ${appState.customerInfo.lastName}<br>DNI: ${appState.customerInfo.dni}<br>Celular: ${appState.customerInfo.phone}<br>${appState.customerInfo.email}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Referencia: ${appState.customerInfo.reference}</p>
                                     ` : `
                                         <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
-                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}<br>DNI: ${appState.customerInfo.dni}</p>
+                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}<br>DNI: ${appState.customerInfo.dni}<br>Correo: ${appState.customerInfo.pickupEmail}</p>
                                     `}
                                     <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
                                 </div>
@@ -687,7 +745,7 @@
                                  <div class="space-y-4">
                                     ${appState.cart.map(item => {
                                         const product = appState.products.find(p => p.id === item.id);
-                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
+                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No aplicable' ? `, Color: ${item.color}` : ''}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
                                     }).join('')}
                                 </div>
                             </div>
@@ -705,7 +763,7 @@
                 } else if (step === 3) { // Pago
                     const productDescriptions = appState.cart.map(item => {
                         const product = appState.products.find(p => p.id === item.id);
-                        return `${item.quantity} x ${product.name} (Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
+                        return `${item.quantity} x ${product.name} (Talla: ${item.size}${item.color !== 'No aplicable' ? `, Color: ${item.color}` : ''}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
                     }).join(', ');
 
                     const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
@@ -726,8 +784,8 @@
                                     </p>
                                     <div class="mt-4 ml-6 space-y-2">
                                         <input type="text" id="payment-number-yapeplin" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
-                                        <input type="date" id="payment-date-yapeplin" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
-                                        <input type="time" id="payment-time-yapeplin" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="order-date-yapeplin" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="order-time-yapeplin" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
                                     </div>
                                 </div>
                                 <div class="border p-4 rounded-lg">
@@ -741,8 +799,8 @@
                                     </p>
                                     <div class="mt-4 ml-6 space-y-2">
                                         <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
-                                        <input type="date" id="payment-date-transferencia" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
-                                        <input type="time" id="payment-time-transferencia" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="order-date-transferencia" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="order-time-transferencia" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
                                     </div>
                                 </div>
                             </div>
@@ -750,7 +808,7 @@
                         </div>
                     `;
                 } else if (step === 4) { // Confirmación
-                     content = `
+                    content = `
                         <div class="text-center py-20">
                             <p class="text-6xl mb-4">🎉</p>
                             <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra!</h2>
@@ -758,26 +816,29 @@
                             <p class="text-orange-600 font-semibold mb-8">Recuerda que, si tu método de pago lo requiere, debes enviar el número de operación, fecha y hora a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
                             <button id="back-to-shop-btn" class="accent-color text-white px-8 py-3 rounded-lg">Seguir Comprando</button>
                         </div>
-                     `;
+                    `;
                 }
-
+                
                 checkoutModalContent.innerHTML = content;
                 checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
 
                 document.getElementById('close-checkout-btn')?.addEventListener('click', closeCheckoutModal);
-
+                
+                // Event listener para el formulario de envío (Paso 1)
                 const shippingForm = document.getElementById('shipping-form');
                 shippingForm?.addEventListener('submit', (e) => {
                     e.preventDefault();
                     // Almacenar datos del cliente al avanzar al paso 2
                     if (appState.checkoutShippingMethod === 'delivery') {
                         appState.customerInfo.fullName = document.getElementById('shipping-fullName').value;
+                        appState.customerInfo.lastName = document.getElementById('shipping-lastName').value;
                         appState.customerInfo.email = document.getElementById('shipping-email').value;
+                        appState.customerInfo.phone = document.getElementById('shipping-phone').value;
+                        appState.customerInfo.dni = document.getElementById('customer-dni').value;
                         appState.customerInfo.address = document.getElementById('shipping-address').value;
+                        appState.customerInfo.reference = document.getElementById('shipping-reference').value;
                         appState.customerInfo.city = document.getElementById('shipping-city').value;
                         appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
-                        appState.customerInfo.phone = document.getElementById('shipping-phone').value;
-                        appState.customerInfo.dni = document.getElementById('customer-dni').value; // Capture DNI
                     } else {
                         appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
                         appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
@@ -792,12 +853,12 @@
                         renderCheckout(1); // Volver a renderizar para actualizar campos de envío
                     });
                 });
-
+                
                 document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
                 document.getElementById('finish-order-btn')?.addEventListener('click', async (event) => { // Added 'event' parameter
                     const finishOrderBtn = event.target; // Get a reference to the button
-
+                    
                     // Disable the button and change its text to prevent multiple clicks
                     finishOrderBtn.disabled = true;
                     finishOrderBtn.textContent = 'Procesando pedido...';
@@ -811,7 +872,7 @@
                         messageBox.textContent = 'Por favor, selecciona un método de pago.';
                         finishOrderBtn.parentNode.insertBefore(messageBox, finishOrderBtn);
                         setTimeout(() => messageBox.remove(), 3000);
-
+                        
                         // Re-enable button if validation fails
                         finishOrderBtn.disabled = false;
                         finishOrderBtn.textContent = 'Finalizar Pedido';
@@ -819,53 +880,54 @@
                         return;
                     }
 
+                    // No almacenar paymentNumber, orderDate, orderTime en appState.paymentInfo para el envío si no son mapeados.
+                    // Solo usamos appState.paymentInfo.paymentMethod para el envío.
                     appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value;
-                    let paymentNumberInput, paymentDateInput, paymentTimeInput;
 
-                    if (appState.paymentInfo.paymentMethod === 'yapeplin') {
-                        paymentNumberInput = document.getElementById('payment-number-yapeplin');
-                        paymentDateInput = document.getElementById('payment-date-yapeplin');
-                        paymentTimeInput = document.getElementById('payment-time-yapeplin');
-                    } else if (appState.paymentInfo.paymentMethod === 'transferencia') {
-                        paymentNumberInput = document.getElementById('payment-number-transferencia');
-                        paymentDateInput = document.getElementById('payment-date-transferencia');
-                        paymentTimeInput = document.getElementById('payment-time-transferencia');
-                    }
-
-                    appState.paymentInfo.paymentNumber = paymentNumberInput ? paymentNumberInput.value : '';
-                    appState.paymentInfo.paymentDate = paymentDateInput ? paymentDateInput.value : '';
-                    appState.paymentInfo.paymentTime = paymentTimeInput ? paymentTimeInput.value : '';
 
                     // Enviar datos del pedido a Google Apps Script
                     const orderData = {
                         timestamp: new Date().toLocaleString(),
                         orderId: `ORD-${Date.now()}`, // ID único para el pedido
-                        customer: appState.customerInfo,
-                        deliveryMethod: appState.checkoutShippingMethod,
-                        items: appState.cart.map(item => {
+                        customer: {
+                            clientName: appState.customerInfo.fullName,
+                            clientLastname: appState.customerInfo.lastName,
+                            clientDNI: appState.customerInfo.dni,
+                            clientPhone: appState.customerInfo.phone,
+                            clientEmail: appState.customerInfo.email,
+                            shippingAddress: appState.customerInfo.address,
+                            addressReference: appState.customerInfo.reference,
+                            city: appState.customerInfo.city,
+                            zipCode: appState.customerInfo.zipCode,
+                            // El método de pago se envía como parte del objeto customer, como lo espera el script
+                            paymentMethod: appState.paymentInfo.paymentMethod
+                        },
+                        // Se renombra 'items' a 'cart' y se mapean los campos necesarios
+                        cart: appState.cart.map(item => {
                             const product = appState.products.find(p => p.id === item.id);
                             return {
                                 name: product.name,
                                 quantity: item.quantity,
                                 price: product.price,
-                                size: item.size,
-                                color: item.color
+                                size: item.size
+                                // El color no es un campo individual en la columna 'Productos' del Apps Script,
+                                // se concatena en la cadena de descripción.
                             };
                         }),
-                        subtotal: subtotal.toFixed(2),
-                        shippingCost: shippingCost.toFixed(2),
-                        total: total.toFixed(2),
-                        payment: appState.paymentInfo
+                        // Se renombra 'total' a 'totalAmount'
+                        totalAmount: total.toFixed(2),
+                        // deliveryMethod se deja como top-level, ya que el script lo accede directamente
+                        deliveryMethod: appState.checkoutShippingMethod
                     };
-
+                    
                     try {
                         const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
                             method: 'POST',
                             mode: 'no-cors', // Importante para Apps Script. No-cors para evitar errores de CORS.
                             headers: {
-                                'Content-Type': 'application/json',
+                                'Content-Type': 'application/json', // Se especifica Content-Type para JSON
                             },
-                            body: JSON.stringify(orderData)
+                            body: JSON.stringify(orderData) // Se envía el JSON directamente
                         });
                         // Aunque 'no-cors' no permite leer la respuesta, la solicitud se envía.
                         console.log('Pedido enviado a Google Apps Script (respuesta no legible por no-cors).');
@@ -879,7 +941,7 @@
                         errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
                         finishOrderBtn.parentNode.insertBefore(errorMessage, finishOrderBtn);
                         setTimeout(() => errorMessage.remove(), 5000);
-
+                        
                         // Re-enable button on error
                         finishOrderBtn.disabled = false;
                         finishOrderBtn.textContent = 'Finalizar Pedido';
@@ -896,12 +958,13 @@
                     // Si el usuario regresa y quiere hacer otro pedido, el botón de "Proceder al Pago"
                     // ya estará disponible si el carrito no está vacío.
                 });
-
+                
                 document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
                     closeCheckoutModal();
                     showHome(); // Volver a la página de portada
                 });
             };
+
 
             const openCartPanel = () => cartPanel.classList.remove('translate-x-full');
             const closeCartPanel = () => cartPanel.classList.add('translate-x-full');
@@ -927,7 +990,7 @@
                     const category = e.target.dataset.category;
                     appState.filters.category = category;
                     categoryTitle.textContent = category === 'Catalogo' ? 'Todos los Productos' : category;
-
+                    
                     if (category === 'Catalogo') {
                         appState.filters.category = 'Todos'; // Resetear a 'Todos' los productos para el catálogo general
                         categoryTitle.textContent = 'Todos los Productos';
@@ -943,7 +1006,7 @@
                     }
                 });
             });
-
+            
             document.getElementById('logo-btn').addEventListener('click', (e) => {
                  e.preventDefault();
                  showHome(); // Volver a la página de portada al hacer clic en el logo
@@ -966,7 +1029,7 @@
                 priceValue.textContent = `S/ ${e.target.value}`;
                 renderProducts();
             });
-
+            
             searchBar.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     if (appState.currentView === 'home') {
@@ -989,17 +1052,17 @@
                 searchBar.value = ''; // Limpiar barra de búsqueda
                 renderProducts();
             });
-
+            
             productGrid.addEventListener('click', (e) => {
                 const card = e.target.closest('.group');
                 if (card) {
                     openProductModal(card.dataset.productId);
                 }
             });
-
+            
             cartBtn.addEventListener('click', openCartPanel);
             closeCartBtn.addEventListener('click', closeCartPanel);
-
+            
             cartItemsContainer.addEventListener('click', (e) => {
                 if (e.target.classList.contains('cart-item-remove')) {
                     const itemId = e.target.dataset.itemId;
@@ -1011,9 +1074,9 @@
                     updateCartQuantity(itemId, change);
                 }
             });
-
+            
             checkoutBtn.addEventListener('click', () => renderCheckout(1));
-
+            
             mobileMenuBtn.addEventListener('click', () => {
                 mobileMenu.classList.toggle('hidden');
                 mobileMenu.classList.toggle('block');
