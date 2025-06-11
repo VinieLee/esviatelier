@@ -9,8 +9,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Adaptable (Blanco Roto, Gris Carbón, Verde Oliva Sutil, Escalas de Azules, Beige, Colores Suaves para Infantil) -->
-    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo una indicación para adjuntar comprobantes. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
-    <!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y comprobantes -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campo de subida de archivo (solo para UI, la funcionalidad de envío real requeriría backend). Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
+    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo un campo para número de pago, fecha y hora, que serán enviados a una Google Sheet. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
+    <!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y campos de corroboración -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campos de texto para número de pago, fecha y hora, que serán enviados a una Google Sheet. Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
@@ -282,6 +282,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
+            // ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT !
+            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'TU_URL_DE_GOOGL_APPS_SCRIPT_AQUI';
+
             const appState = {
                 products: [],
                 cart: [],
@@ -294,7 +297,24 @@
                     searchTerm: ''
                 },
                 currentView: 'home', // 'home' or 'catalog'
-                checkoutShippingMethod: 'delivery' // 'delivery' or 'pickup'
+                checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
+                // Datos del comprador (ejemplo, en una app real se recopilarían de los campos del formulario)
+                customerInfo: {
+                    fullName: '',
+                    email: '',
+                    address: '',
+                    city: '',
+                    zipCode: '',
+                    phone: '',
+                    pickupName: '',
+                    pickupEmail: ''
+                },
+                paymentInfo: {
+                    paymentMethod: '',
+                    paymentNumber: '',
+                    paymentDate: '',
+                    paymentTime: ''
+                }
             };
 
             const mockProducts = [
@@ -331,7 +351,7 @@
             const closeCartBtn = document.getElementById('close-cart-btn');
             const cartItemsContainer = document.getElementById('cart-items-container');
             const cartSubtotalEl = document.getElementById('cart-subtotal');
-            const cartCountEl = document.getElementById('cart-count');
+            const cartCountEl = document = document.getElementById('cart-count');
 
             const checkoutBtn = document.getElementById('checkout-btn');
             const checkoutModal = document.getElementById('checkout-modal');
@@ -485,7 +505,6 @@
                     const selectedSize = document.querySelector('input[name="size"]:checked');
                     const selectedColor = document.querySelector('input[name="color"]:checked');
                     if (!selectedSize || !selectedColor) {
-                        // Replaced alert with a simple message within the modal for better UX
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
                         messageBox.textContent = 'Por favor, selecciona talla y color.';
@@ -599,22 +618,22 @@
 
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
                                     <div class="space-y-4">
-                                        <input type="text" placeholder="Nombre completo" required class="w-full p-3 border rounded-lg">
-                                        <input type="email" placeholder="Correo electrónico" required class="w-full p-3 border rounded-lg">
-                                        <input type="text" placeholder="Dirección" required class="w-full p-3 border rounded-lg">
+                                        <input type="text" id="shipping-fullName" placeholder="Nombre completo" value="${appState.customerInfo.fullName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="email" id="shipping-email" placeholder="Correo electrónico" value="${appState.customerInfo.email}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-address" placeholder="Dirección" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
                                         <div class="flex gap-4">
-                                            <input type="text" placeholder="Ciudad" required class="w-full p-3 border rounded-lg">
-                                            <input type="text" placeholder="Código Postal" class="w-full p-3 border rounded-lg">
+                                            <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
+                                            <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
                                         </div>
-                                        <input type="tel" placeholder="Teléfono" required class="w-full p-3 border rounded-lg">
+                                        <input type="tel" id="shipping-phone" placeholder="Teléfono" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     ` : `
                                     <div class="space-y-4">
                                         <p class="text-gray-700">Puedes recoger tu pedido en nuestra tienda física:</p>
                                         <p class="font-semibold">Esvi Atelier - Av. Principal 123, Miraflores, Lima.</p>
                                         <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
-                                        <input type="text" placeholder="Nombre completo para recoger" required class="w-full p-3 border rounded-lg">
-                                        <input type="email" placeholder="Correo electrónico de contacto" required class="w-full p-3 border rounded-lg">
+                                        <input type="text" id="pickup-name" placeholder="Nombre completo para recoger" value="${appState.customerInfo.pickupName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="email" id="pickup-email" placeholder="Correo electrónico de contacto" value="${appState.customerInfo.pickupEmail}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     `}
                                     <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
@@ -647,10 +666,10 @@
                                 <div class="bg-gray-50 p-6 rounded-lg mb-6">
                                     <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
-                                        <p class="text-gray-600">John Doe<br>Av. Siempre Viva 123<br>Lima, 15023<br>Perú</p>
+                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Teléfono: ${appState.customerInfo.phone}</p>
                                     ` : `
                                         <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
-                                        <p class="text-gray-600">A nombre de: John Doe</p>
+                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}</p>
                                     `}
                                     <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
                                 </div>
@@ -695,10 +714,10 @@
                                         Realiza tu pago a nuestro número de celular: <span class="font-semibold">987 654 321</span>.<br>
                                         <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
                                     </p>
-                                    <div class="mt-4 ml-6">
-                                        <label for="payment-screenshot" class="block text-sm font-medium text-gray-700">Adjuntar captura de pantalla (opcional)</label>
-                                        <input type="file" id="payment-screenshot" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
-                                        <p class="text-xs text-gray-500 mt-1">Este campo es solo para referencia visual. Deberás enviar la captura manualmente por correo.</p>
+                                    <div class="mt-4 ml-6 space-y-2">
+                                        <input type="text" id="payment-number-yapeplin" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="payment-date-yapeplin" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="payment-time-yapeplin" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
                                     </div>
                                 </div>
                                 <div class="border p-4 rounded-lg">
@@ -710,10 +729,10 @@
                                         <span class="font-semibold">Interbank: 890-1234567890</span><br>
                                         <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
                                     </p>
-                                    <div class="mt-4 ml-6">
-                                        <label for="payment-screenshot-transfer" class="block text-sm font-medium text-gray-700">Adjuntar captura de pantalla (opcional)</label>
-                                        <input type="file" id="payment-screenshot-transfer" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
-                                        <p class="text-xs text-gray-500 mt-1">Este campo es solo para referencia visual. Deberás enviar la captura manualmente por correo.</p>
+                                    <div class="mt-4 ml-6 space-y-2">
+                                        <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="payment-date-transferencia" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="payment-time-transferencia" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
                                     </div>
                                 </div>
                             </div>
@@ -726,7 +745,7 @@
                             <p class="text-6xl mb-4">🎉</p>
                             <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra!</h2>
                             <p class="text-gray-600 mb-6">Hemos recibido tu pedido. Recibirás un correo de confirmación pronto.</p>
-                            <p class="text-orange-600 font-semibold mb-8">Recuerda enviar la captura de pantalla de tu pago a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
+                            <p class="text-orange-600 font-semibold mb-8">Recuerda que, si tu método de pago lo requiere, debes enviar el número de operación, fecha y hora a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
                             <button id="back-to-shop-btn" class="accent-color text-white px-8 py-3 rounded-lg">Seguir Comprando</button>
                         </div>
                      `;
@@ -740,6 +759,18 @@
                 const shippingForm = document.getElementById('shipping-form');
                 shippingForm?.addEventListener('submit', (e) => {
                     e.preventDefault();
+                    // Almacenar datos del cliente al avanzar al paso 2
+                    if (appState.checkoutShippingMethod === 'delivery') {
+                        appState.customerInfo.fullName = document.getElementById('shipping-fullName').value;
+                        appState.customerInfo.email = document.getElementById('shipping-email').value;
+                        appState.customerInfo.address = document.getElementById('shipping-address').value;
+                        appState.customerInfo.city = document.getElementById('shipping-city').value;
+                        appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
+                        appState.customerInfo.phone = document.getElementById('shipping-phone').value;
+                    } else {
+                        appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
+                        appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
+                    }
                     renderCheckout(2);
                 });
 
@@ -752,7 +783,82 @@
                 
                 document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
-                document.getElementById('finish-order-btn')?.addEventListener('click', () => {
+                document.getElementById('finish-order-btn')?.addEventListener('click', async () => {
+                    // Recolectar datos de pago antes de enviar
+                    const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
+                    if (!selectedPaymentMethodRadio) {
+                        const messageBox = document.createElement('p');
+                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+                        messageBox.textContent = 'Por favor, selecciona un método de pago.';
+                        document.getElementById('finish-order-btn').parentNode.insertBefore(messageBox, document.getElementById('finish-order-btn'));
+                        setTimeout(() => messageBox.remove(), 3000);
+                        return;
+                    }
+
+                    appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value;
+                    let paymentNumberInput, paymentDateInput, paymentTimeInput;
+
+                    if (appState.paymentInfo.paymentMethod === 'yapeplin') {
+                        paymentNumberInput = document.getElementById('payment-number-yapeplin');
+                        paymentDateInput = document.getElementById('payment-date-yapeplin');
+                        paymentTimeInput = document.getElementById('payment-time-yapeplin');
+                    } else if (appState.paymentInfo.paymentMethod === 'transferencia') {
+                        paymentNumberInput = document.getElementById('payment-number-transferencia');
+                        paymentDateInput = document.getElementById('payment-date-transferencia');
+                        paymentTimeInput = document.getElementById('payment-time-transferencia');
+                    }
+
+                    appState.paymentInfo.paymentNumber = paymentNumberInput ? paymentNumberInput.value : '';
+                    appState.paymentInfo.paymentDate = paymentDateInput ? paymentDateInput.value : '';
+                    appState.paymentInfo.paymentTime = paymentTimeInput ? paymentTimeInput.value : '';
+
+                    // Enviar datos del pedido a Google Apps Script
+                    const orderData = {
+                        timestamp: new Date().toLocaleString(),
+                        orderId: `ORD-${Date.now()}`, // ID único para el pedido
+                        customer: appState.customerInfo,
+                        deliveryMethod: appState.checkoutShippingMethod,
+                        items: appState.cart.map(item => {
+                            const product = appState.products.find(p => p.id === item.id);
+                            return {
+                                name: product.name,
+                                quantity: item.quantity,
+                                price: product.price,
+                                size: item.size,
+                                color: item.color
+                            };
+                        }),
+                        subtotal: subtotal.toFixed(2),
+                        shippingCost: shippingCost.toFixed(2),
+                        total: total.toFixed(2),
+                        payment: appState.paymentInfo
+                    };
+
+                    try {
+                        const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                            method: 'POST',
+                            mode: 'no-cors', // Importante para Apps Script. No-cors para evitar errores de CORS.
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(orderData)
+                        });
+                        // Aunque 'no-cors' no permite leer la respuesta, la solicitud se envía.
+                        console.log('Pedido enviado a Google Apps Script (respuesta no legible por no-cors).');
+                        // Puedes añadir un indicador de éxito visual aquí si lo deseas.
+
+                    } catch (error) {
+                        console.error('Error al enviar el pedido a Google Apps Script:', error);
+                        // Mensaje de error para el usuario si falla el envío
+                        const errorMessage = document.createElement('p');
+                        errorMessage.className = 'text-red-500 text-sm mt-2 text-center';
+                        errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
+                        document.getElementById('finish-order-btn').parentNode.insertBefore(errorMessage, document.getElementById('finish-order-btn'));
+                        setTimeout(() => errorMessage.remove(), 5000);
+                        return; // Detener el flujo si hay un error de envío
+                    }
+
+                    // Limpiar carrito y mostrar confirmación
                     appState.cart = [];
                     renderCart();
                     renderCheckout(4);
