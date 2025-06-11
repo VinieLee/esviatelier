@@ -187,8 +187,8 @@
                                 <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="XL"><span>XL</span></label>
                             </div>
                         </div>
-                        <!-- Color -->
-                        <div>
+                        <!-- Color (removido para selección en esta versión, mantenido solo como metadata) -->
+                        <!-- <div>
                             <h3 class="font-bold mb-2">Color</h3>
                             <div class="flex flex-wrap gap-2">
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Negro"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-black cursor-pointer"></span></label>
@@ -200,7 +200,7 @@
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Gris"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-gray-500 cursor-pointer"></span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Amarillo"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-yellow-400 cursor-pointer"></span></label>
                             </div>
-                        </div>
+                        </div> -->
                         <!-- Precio -->
                         <div>
                             <h3 class="font-bold mb-2">Precio</h3>
@@ -297,7 +297,7 @@
                 filters: {
                     category: 'Todos',
                     talla: [],
-                    color: [],
+                    color: [], // Se mantiene la propiedad 'color' para filtros si se desea reintroducir la UI de filtro más tarde
                     tipo: [],
                     maxPrice: 500,
                     searchTerm: ''
@@ -435,9 +435,10 @@
                     filteredProducts = filteredProducts.filter(p => p.sizes.some(s => appState.filters.talla.includes(s)));
                 }
                 
-                if (appState.filters.color.length > 0) {
-                    filteredProducts = filteredProducts.filter(p => p.colors.some(c => appState.filters.color.includes(c)));
-                }
+                // El filtro de color se mantiene, pero la UI de selección de color en el modal fue eliminada
+                // if (appState.filters.color.length > 0) {
+                //     filteredProducts = filteredProducts.filter(p => p.colors.some(c => appState.filters.color.includes(c)));
+                // }
                 
                 if (appState.filters.tipo.length > 0) {
                     filteredProducts = filteredProducts.filter(p => appState.filters.tipo.includes(p.tipo));
@@ -497,14 +498,52 @@
                                         ${product.sizes.map(size => `<label><input type="radio" name="size" value="${size}" class="sr-only peer"><span class="px-4 py-2 border rounded-lg cursor-pointer peer-checked:bg-gray-800 peer-checked:text-white">${size}</span></label>`).join('')}
                                     </div>
                                 </div>
-                                ${product.colors && product.colors.length > 0 ? `
+                                
+                                <!-- Sección de medidas internacionales de talla -->
                                 <div class="mb-6">
-                                    <h4 class="font-bold mb-2">Color:</h4>
-                                     <div class="flex flex-wrap gap-3">
-                                        ${product.colors.map(color => `<label><input type="radio" name="color" value="${color}" class="sr-only peer"><span class="h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-800 block cursor-pointer" style="background-color: ${color.toLowerCase() === 'blanco' ? 'white' : color.toLowerCase()}; border-color: ${color.toLowerCase() === 'blanco' ? '#ccc' : 'transparent'};"></span></label>`).join('')}
+                                    <h4 class="font-bold mb-2">Guía de Tallas (Medidas del Cuerpo en cm):</h4>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-left border-collapse">
+                                            <thead>
+                                                <tr>
+                                                    <th class="border px-4 py-2 bg-gray-100">Talla</th>
+                                                    <th class="border px-4 py-2 bg-gray-100">Pecho (cm)</th>
+                                                    <th class="border px-4 py-2 bg-gray-100">Cintura (cm)</th>
+                                                    <th class="border px-4 py-2 bg-gray-100">Cadera (cm)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="border px-4 py-2">S</td>
+                                                    <td class="border px-4 py-2">88-92</td>
+                                                    <td class="border px-4 py-2">72-76</td>
+                                                    <td class="border px-4 py-2">94-98</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border px-4 py-2">M</td>
+                                                    <td class="border px-4 py-2">96-100</td>
+                                                    <td class="border px-4 py-2">80-84</td>
+                                                    <td class="border px-4 py-2">102-106</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border px-4 py-2">L</td>
+                                                    <td class="border px-4 py-2">104-108</td>
+                                                    <td class="border px-4 py-2">88-92</td>
+                                                    <td class="border px-4 py-2">110-114</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="border px-4 py-2">XL</td>
+                                                    <td class="border px-4 py-2">112-116</td>
+                                                    <td class="border px-4 py-2">96-100</td>
+                                                    <td class="border px-4 py-2">118-122</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
+                                    <p class="text-sm text-gray-600 mt-2">*Nota: Medidas del cuerpo. Las tallas pueden variar ligeramente.</p>
                                 </div>
-                                ` : ''}
+                                <!-- Fin de la sección de medidas internacionales de talla -->
+
                             </div>
                             <div class="mt-auto">
                                 <button data-product-id="${product.id}" class="add-to-cart-btn w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
@@ -525,9 +564,10 @@
 
                 document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
                     const selectedSize = document.querySelector('input[name="size"]:checked');
-                    const selectedColor = document.querySelector('input[name="color"]:checked');
+                    // El color se establece como 'No aplicable' ya que la selección de color se ha eliminado
+                    const selectedColor = 'No aplicable'; 
 
-                    if (!selectedSize) { // Solo se valida la talla
+                    if (!selectedSize) { 
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
                         messageBox.textContent = 'Por favor, selecciona una talla.';
@@ -535,7 +575,7 @@
                         setTimeout(() => messageBox.remove(), 3000);
                         return;
                     }
-                    addToCart(product.id, selectedSize.value, selectedColor ? selectedColor.value : 'No especificado');
+                    addToCart(product.id, selectedSize.value, selectedColor);
                     productModal.classList.add('opacity-0', 'pointer-events-none');
                     productModalContent.classList.add('scale-95');
                     openCartPanel();
@@ -559,7 +599,7 @@
                             <img src="${product.image}" alt="${product.name}" class="w-20 h-24 object-cover rounded-lg">
                             <div class="flex-grow">
                                 <h4 class="font-bold">${product.name}</h4>
-                                <p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p>
+                                <p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No aplicable' ? `, Color: ${item.color}` : ''}</p>
                                 <p class="font-bold text-lg">S/ ${(product.price * item.quantity).toFixed(2)}</p>
                             </div>
                             <div class="flex flex-col items-center justify-between">
@@ -590,7 +630,7 @@
                         id: productId,
                         quantity: 1,
                         size,
-                        color
+                        color // Siempre 'No aplicable' en esta versión
                     });
                 }
                 renderCart();
