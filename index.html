@@ -1,997 +1,998 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Esvi Atelier - Moda y Estilo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Adaptable (Blanco Roto, Gris Carbón, Verde Oliva Sutil, Escalas de Azules, Beige, Colores Suaves para Infantil) -->
-    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo un campo para número de pago, fecha y hora, que serán enviados a una Google Sheet. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
-    <!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y campos de corroboración -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campos de texto para número de pago, fecha y hora, que serán enviados a una Google Sheet. Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
-    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
-    <style>
-        body {
-            font-family: 'Lato', sans-serif;
-            background-color: #F8F7F5; /* Blanco Roto */
-            color: #333333; /* Gris Carbón */
-            transition: background-color 0.5s ease; /* Transición para cambios de color de fondo */
-        }
-        .accent-color {
-            background-color: #8A9A5B; /* Verde Oliva */
-        }
-        .accent-color-text {
-            color: #8A9A5B;
-        }
-        .accent-color-border {
-            border-color: #8A9A5B;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        .no-scrollbar {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-        }
-        .price-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #8A9A5B;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        .price-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #8A9A5B;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        .modal, .cart-panel, .checkout-modal {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .cart-panel {
-            transition: transform 0.3s ease-in-out;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Esvi Atelier - Moda y Estilo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<!-- Chosen Palette: Adaptable (Blanco Roto, Gris Carbón, Verde Oliva Sutil, Escalas de Azules, Beige, Colores Suaves para Infantil) -->
+<!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo un campo para número de pago, fecha y hora, que serán enviados a una Google Sheet. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
+<!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y campos de corroboración -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campos de texto para número de pago, fecha y hora, que serán enviados a una Google Sheet. Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+<style>
+body {
+font-family: 'Lato', sans-serif;
+background-color: #F8F7F5; /* Blanco Roto */
+color: #333333; /* Gris Carbón */
+transition: background-color 0.5s ease; /* Transición para cambios de color de fondo */
+}
+.accent-color {
+background-color: #8A9A5B; /* Verde Oliva */
+}
+.accent-color-text {
+color: #8A9A5B;
+}
+.accent-color-border {
+border-color: #8A9A5B;
+}
+.no-scrollbar::-webkit-scrollbar {
+display: none;
+}
+.no-scrollbar {
+-ms-overflow-style: none;
+scrollbar-width: none;
+}
+.price-slider::-webkit-slider-thumb {
+-webkit-appearance: none;
+appearance: none;
+width: 20px;
+height: 20px;
+background: #8A9A5B;
+cursor: pointer;
+border-radius: 50%;
+}
+.price-slider::-moz-range-thumb {
+width: 20px;
+height: 20px;
+background: #8A9A5B;
+cursor: pointer;
+border-radius: 50%;
+}
+.modal, .cart-panel, .checkout-modal {
+transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.cart-panel {
+transition: transform 0.3s ease-in-out;
+}
 
-        /* Colores específicos por categoría */
-        .category-hombre {
-            background-color: #F0F8FF; /* Azul muy claro */
-            color: #1A1A1A;
-        }
-        .category-mujer {
-            background-color: #F5EFE6; /* Beige claro */
-            color: #333333;
-        }
-        .category-infantil {
-            background-color: #FFFACD; /* Amarillo pastel */
-            color: #333333;
-        }
-        .category-ofertas, .category-novedades {
-            background-color: #FEF3F2; /* Rojo pastel */
-            color: #333333;
-        }
-        .category-todos, .category-home {
-            background-color: #F8F7F5; /* Blanco Roto */
-            color: #333333;
-        }
-    </style>
+/* Colores específicos por categoría */
+.category-hombre {
+background-color: #F0F8FF; /* Azul muy claro */
+color: #1A1A1A;
+}
+.category-mujer {
+background-color: #F5EFE6; /* Beige claro */
+color: #333333;
+}
+.category-infantil {
+background-color: #FFFACD; /* Amarillo pastel */
+color: #333333;
+}
+.category-ofertas, .category-novedades {
+background-color: #FEF3F2; /* Rojo pastel */
+color: #333333;
+}
+.category-todos, .category-home {
+background-color: #F8F7F5; /* Blanco Roto */
+color: #333333;
+}
+</style>
 </head>
 <body class="antialiased category-home">
 
-    <!-- MODAL DE DETALLE DE PRODUCTO -->
-    <div id="product-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 opacity-0 pointer-events-none">
-        <div id="product-modal-content" class="bg-white rounded-lg shadow-2xl w-11/12 md:w-3/4 lg:w-2/3 max-w-4xl h-5/6 transform scale-95">
-            <!-- El contenido se inyecta dinámicamente -->
-        </div>
-    </div>
-    
-    <!-- PANEL LATERAL DEL CARRITO -->
-    <div id="cart-panel" class="cart-panel fixed top-0 right-0 h-full w-full md:w-1/3 lg:w-1/4 bg-white shadow-2xl z-50 transform translate-x-full">
-        <div class="flex flex-col h-full">
-            <div class="p-5 flex justify-between items-center border-b">
-                <h2 class="text-2xl font-bold">Tu Carrito</h2>
-                <button id="close-cart-btn" class="text-3xl font-light">&times;</button>
-            </div>
-            <div id="cart-items-container" class="flex-grow p-5 overflow-y-auto no-scrollbar">
-                <!-- Los artículos del carrito se inyectan aquí -->
-            </div>
-            <div class="p-5 border-t">
-                <div class="flex justify-between font-bold text-lg mb-4">
-                    <span>Subtotal</span>
-                    <span id="cart-subtotal">S/ 0.00</span>
-                </div>
-                <button id="checkout-btn" class="w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
-                    Proceder al Pago
-                </button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- MODAL DE CHECKOUT -->
-    <div id="checkout-modal" class="checkout-modal fixed inset-0 bg-white z-50 opacity-0 pointer-events-none overflow-y-auto">
-        <div id="checkout-modal-content" class="container mx-auto px-4 py-8">
-             <!-- El contenido del checkout se inyecta dinámicamente -->
-        </div>
-    </div>
+<!-- MODAL DE DETALLE DE PRODUCTO -->
+<div id="product-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 opacity-0 pointer-events-none">
+<div id="product-modal-content" class="bg-white rounded-lg shadow-2xl w-11/12 md:w-3/4 lg:w-2/3 max-w-4xl h-5/6 transform scale-95">
+<!-- El contenido se inyecta dinámicamente -->
+</div>
+</div>
+
+<!-- PANEL LATERAL DEL CARRITO -->
+<div id="cart-panel" class="cart-panel fixed top-0 right-0 h-full w-full md:w-1/3 lg:w-1/4 bg-white shadow-2xl z-50 transform translate-x-full">
+<div class="flex flex-col h-full">
+<div class="p-5 flex justify-between items-center border-b">
+<h2 class="text-2xl font-bold">Tu Carrito</h2>
+<button id="close-cart-btn" class="text-3xl font-light">&times;</button>
+</div>
+<div id="cart-items-container" class="flex-grow p-5 overflow-y-auto no-scrollbar">
+<!-- Los artículos del carrito se inyectan aquí -->
+</div>
+<div class="p-5 border-t">
+<div class="flex justify-between font-bold text-lg mb-4">
+<span>Subtotal</span>
+<span id="cart-subtotal">S/ 0.00</span>
+</div>
+<button id="checkout-btn" class="w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
+Proceder al Pago
+</button>
+</div>
+</div>
+</div>
+
+<!-- MODAL DE CHECKOUT -->
+<div id="checkout-modal" class="checkout-modal fixed inset-0 bg-white z-50 opacity-0 pointer-events-none overflow-y-auto">
+<div id="checkout-modal-content" class="container mx-auto px-4 py-8">
+<!-- El contenido del checkout se inyecta dinámicamente -->
+</div>
+</div>
 
 
-    <!-- CONTENIDO PRINCIPAL DE LA PÁGINA -->
-    <div class="container mx-auto px-4">
+<!-- CONTENIDO PRINCIPAL DE LA PÁGINA -->
+<div class="container mx-auto px-4">
 
-        <!-- ENCABEZADO -->
-        <header class="py-4 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-200">
-            <div class="flex justify-between items-center">
-                <a href="#" id="logo-btn" class="text-3xl font-bold accent-color-text">Esvi Atelier</a>
-                <nav class="hidden md:flex space-x-8">
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Catalogo">Catálogo</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Hombre">Hombre</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Mujer">Mujer</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Infantil">Infantil</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas<span class="ml-1 text-red-500">!</span></a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades<span class="ml-1 text-blue-500">!</span></a>
-                </nav>
-                <div class="flex items-center space-x-6">
-                    <div class="relative hidden md:block">
-                        <input type="search" id="search-bar" placeholder="Buscar..." class="pl-10 pr-4 py-2 w-48 rounded-full border focus:outline-none focus:border-gray-400">
-                        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
-                    </div>
-                    <button id="user-btn" class="text-2xl">👤</button>
-                    <button id="cart-btn" class="text-2xl relative">
-                        <span>🛒</span>
-                        <span id="cart-count" class="absolute -top-2 -right-2 accent-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
-                    </button>
-                    <button id="mobile-menu-btn" class="md:hidden text-2xl">☰</button>
-                </div>
-            </div>
-            <!-- Menú Móvil -->
-            <div id="mobile-menu" class="hidden md:hidden mt-4">
-                 <nav class="flex flex-col space-y-4">
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Catalogo">Catálogo</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Hombre">Hombre</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Mujer">Mujer</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Infantil">Infantil</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas<span class="ml-1 text-red-500">!</span></a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades<span class="ml-1 text-blue-500">!</span></a>
-                </nav>
-            </div>
-        </header>
+<!-- ENCABEZADO -->
+<header class="py-4 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-200">
+<div class="flex justify-between items-center">
+<a href="#" id="logo-btn" class="text-3xl font-bold accent-color-text">Esvi Atelier</a>
+<nav class="hidden md:flex space-x-8">
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Catalogo">Catálogo</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Hombre">Hombre</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Mujer">Mujer</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Infantil">Infantil</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas<span class="ml-1 text-red-500">!</span></a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades<span class="ml-1 text-blue-500">!</span></a>
+</nav>
+<div class="flex items-center space-x-6">
+<div class="relative hidden md:block">
+<input type="search" id="search-bar" placeholder="Buscar..." class="pl-10 pr-4 py-2 w-48 rounded-full border focus:outline-none focus:border-gray-400">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">🔍</span>
+</div>
+<button id="user-btn" class="text-2xl">👤</button>
+<button id="cart-btn" class="text-2xl relative">
+<span>🛒</span>
+<span id="cart-count" class="absolute -top-2 -right-2 accent-color text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+</button>
+<button id="mobile-menu-btn" class="md:hidden text-2xl">☰</button>
+</div>
+</div>
+<!-- Menú Móvil -->
+<div id="mobile-menu" class="hidden md:hidden mt-4">
+<nav class="flex flex-col space-y-4">
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Catalogo">Catálogo</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Hombre">Hombre</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Mujer">Mujer</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Infantil">Infantil</a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas<span class="ml-1 text-red-500">!</span></a>
+<a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades<span class="ml-1 text-blue-500">!</span></a>
+</nav>
+</div>
+</header>
 
-        <!-- PÁGINA DE PORTADA (HOME) -->
-        <section id="landing-page" class="relative flex items-center justify-center h-[calc(100vh-80px)] bg-neutral-100 text-center py-20 px-4">
-            <div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://placehold.co/1920x1080/D3D3D3/000?text=Bienvenida+a+Esvi+Atelier');"></div>
-            <div class="relative z-10 p-8 bg-white/70 backdrop-blur-sm rounded-lg shadow-xl max-w-2xl mx-auto">
-                <h1 class="text-5xl md:text-6xl font-bold mb-4 accent-color-text">Bienvenida a Esvi Atelier</h1>
-                <p class="text-lg md:text-xl text-gray-800 mb-8">Descubre la moda que te define. Estilo, calidad y diseño en cada prenda.</p>
-                <button id="explore-catalog-btn" class="text-white p-4 text-xl rounded-full accent-color hover:opacity-90 transition-opacity transform hover:scale-105">
-                    Explorar Catálogo
-                </button>
-            </div>
-        </section>
+<!-- PÁGINA DE PORTADA (HOME) -->
+<section id="landing-page" class="relative flex items-center justify-center h-[calc(100vh-80px)] bg-neutral-100 text-center py-20 px-4">
+<div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://placehold.co/1920x1080/D3D3D3/000?text=Bienvenida+a+Esvi+Atelier');"></div>
+<div class="relative z-10 p-8 bg-white/70 backdrop-blur-sm rounded-lg shadow-xl max-w-2xl mx-auto">
+<h1 class="text-5xl md:text-6xl font-bold mb-4 accent-color-text">Bienvenida a Esvi Atelier</h1>
+<p class="text-lg md:text-xl text-gray-800 mb-8">Descubre la moda que te define. Estilo, calidad y diseño en cada prenda.</p>
+<button id="explore-catalog-btn" class="text-white p-4 text-xl rounded-full accent-color hover:opacity-90 transition-opacity transform hover:scale-105">
+Explorar Catálogo
+</button>
+</div>
+</section>
 
-        <!-- MAIN CONTENT (CATALOG PAGE) - Hidden by default -->
-        <main id="main-content" class="py-8 hidden">
-            <div class="flex flex-col md:flex-row gap-8">
-                <!-- FILTROS -->
-                <aside class="w-full md:w-1/4 lg:w-1/5">
-                    <h2 class="text-2xl font-bold mb-6">Filtros</h2>
-                    <div id="filters-container" class="space-y-6">
-                        <!-- Talla -->
-                        <div>
-                            <h3 class="font-bold mb-2">Talla</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="XS"><span>XS</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="S"><span>S</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="M"><span>M</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="L"><span>L</span></label>
-                                <label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="XL"><span>XL</span></label>
-                            </div>
-                        </div>
-                        <!-- Color -->
-                        <div>
-                            <h3 class="font-bold mb-2">Color</h3>
-                            <div class="flex flex-wrap gap-2">
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Negro"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-black cursor-pointer"></span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Blanco"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-white cursor-pointer"></span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Azul"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-blue-600 cursor-pointer"></span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Rojo"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-red-600 cursor-pointer"></span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Verde"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-green-600 cursor-pointer"></span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Beige"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-amber-200 cursor-pointer"></span></label>
-                            </div>
-                        </div>
-                        <!-- Precio -->
-                        <div>
-                            <h3 class="font-bold mb-2">Precio</h3>
-                            <input type="range" id="price-slider" min="0" max="500" value="500" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer price-slider">
-                            <div class="text-right mt-1">Hasta: <span id="price-value">S/ 500</span></div>
-                        </div>
-                        <!-- Tipo de Prenda -->
-                        <div>
-                            <h3 class="font-bold mb-2">Tipo de Prenda</h3>
-                            <div id="tipo-prenda-filter" class="space-y-1">
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Camisa"><span> Camisas</span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Pantalón"><span> Pantalones</span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Vestido"><span> Vestidos</span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Chompa"><span> Chompas</span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Polo"><span> Polos</span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Conjunto"><span> Conjuntos</span></label>
-                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Falda"><span> Faldas</span></label>
-                            </div>
-                        </div>
-                        <button id="clear-filters-btn" class="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition-colors">Limpiar Filtros</button>
-                    </div>
-                </aside>
+<!-- MAIN CONTENT (CATALOG PAGE) - Hidden by default -->
+<main id="main-content" class="py-8 hidden">
+<div class="flex flex-col md:flex-row gap-8">
+<!-- FILTROS -->
+<aside class="w-full md:w-1/4 lg:w-1/5">
+<h2 class="text-2xl font-bold mb-6">Filtros</h2>
+<div id="filters-container" class="space-y-6">
+<!-- Talla -->
+<div>
+<h3 class="font-bold mb-2">Talla</h3>
+<div class="flex flex-wrap gap-2">
+<label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="XS"><span>XS</span></label>
+<label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="S"><span>S</span></label>
+<label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="M"><span>M</span></label>
+<label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="L"><span>L</span></label>
+<label class="flex items-center space-x-2"><input type="checkbox" class="filter-checkbox accent-color" data-filter="talla" value="XL"><span>XL</span></label>
+</div>
+</div>
+<!-- Color -->
+<div>
+<h3 class="font-bold mb-2">Color</h3>
+<div class="flex flex-wrap gap-2">
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Negro"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-black cursor-pointer"></span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Blanco"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-white cursor-pointer"></span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Azul"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-blue-600 cursor-pointer"></span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Rojo"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-red-600 cursor-pointer"></span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Verde"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-green-600 cursor-pointer"></span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Beige"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-amber-200 cursor-pointer"></span></label>
+</div>
+</div>
+<!-- Precio -->
+<div>
+<h3 class="font-bold mb-2">Precio</h3>
+<input type="range" id="price-slider" min="0" max="500" value="500" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer price-slider">
+<div class="text-right mt-1">Hasta: <span id="price-value">S/ 500</span></div>
+</div>
+<!-- Tipo de Prenda -->
+<div>
+<h3 class="font-bold mb-2">Tipo de Prenda</h3>
+<div id="tipo-prenda-filter" class="space-y-1">
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Camisa"><span> Camisas</span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Pantalón"><span> Pantalones</span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Vestido"><span> Vestidos</span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Chompa"><span> Chompas</span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Polo"><span> Polos</span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Conjunto"><span> Conjuntos</span></label>
+<label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Falda"><span> Faldas</span></label>
+</div>
+</div>
+<button id="clear-filters-btn" class="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition-colors">Limpiar Filtros</button>
+</div>
+</aside>
 
-                <!-- LISTADO DE PRODUCTOS -->
-                <section class="w-full md:w-3/4 lg:w-4/5">
-                    <h1 id="category-title" class="text-3xl font-bold mb-6">Todos los Productos</h1>
-                    <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
-                        <!-- Las tarjetas de producto se inyectan aquí -->
-                    </div>
-                    <div id="no-results" class="hidden text-center py-20">
-                        <p class="text-2xl text-gray-500">😔</p>
-                        <p class="mt-4 text-xl text-gray-500">No se encontraron productos que coincidan con tu búsqueda.</p>
-                    </div>
-                </section>
-            </div>
-        </main>
-        
-        <!-- PIE DE PÁGINA -->
-        <footer class="mt-16 py-10 border-t border-gray-200 text-center text-gray-500">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div>
-                    <h3 class="font-bold text-lg mb-4 text-black">Suscríbete a Novedades</h3>
-                    <form class="flex">
-                        <input type="email" placeholder="tu@email.com" class="w-full p-2 border border-r-0 rounded-l-lg focus:outline-none">
-                        <button type="submit" class="accent-color text-white px-4 rounded-r-lg">Enviar</button>
-                    </form>
-                </div>
-                 <div>
-                    <h3 class="font-bold text-lg mb-4 text-black">Atención al Cliente</h3>
-                    <ul class="space-y-2">
-                        <li><a href="#" class="hover:underline">Preguntas Frecuentes</a></li>
-                        <li><a href="#" class="hover:underline">Política de Devoluciones</a></li>
-                        <li><a href="#" class="hover:underline">Términos y Condiciones</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h3 class="font-bold text-lg mb-4 text-black">Síguenos</h3>
-                    <div class="flex justify-center space-x-4 text-2xl">
-                        <a href="#" class="hover:text-black">📷</a>
-                        <a href="#" class="hover:text-black">📘</a>
-                        <a href="#" class="hover:text-black">📌</a>
-                    </div>
-                </div>
-            </div>
-            <!-- Sección Nosotros -->
-            <div class="mt-10 pt-10 border-t border-gray-200">
-                <h3 class="font-bold text-lg mb-4 text-black">Sobre Esvi Atelier</h3>
-                <p class="max-w-xl mx-auto text-gray-600">
-                    En Esvi Atelier, creemos que la moda es una expresión personal. Diseñamos prendas únicas y atemporales que combinan estilo, calidad y confort, para que te sientas increíble en cada momento. Nuestra misión es ofrecerte ropa que no solo sigua tendencias, sino que te permita crear tu propio estilo auténtico.
-                </p>
-            </div>
-            <p class="mt-10 text-sm">&copy; 2025 Esvi Atelier. Todos los derechos reservados.</p>
-        </footer>
+<!-- LISTADO DE PRODUCTOS -->
+<section class="w-full md:w-3/4 lg:w-4/5">
+<h1 id="category-title" class="text-3xl font-bold mb-6">Todos los Productos</h1>
+<div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+<!-- Las tarjetas de producto se inyectan aquí -->
+</div>
+<div id="no-results" class="hidden text-center py-20">
+<p class="text-2xl text-gray-500">😔</p>
+<p class="mt-4 text-xl text-gray-500">No se encontraron productos que coincidan con tu búsqueda.</p>
+</div>
+</section>
+</div>
+</main>
 
-    </div>
+<!-- PIE DE PÁGINA -->
+<footer class="mt-16 py-10 border-t border-gray-200 text-center text-gray-500">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<div>
+<h3 class="font-bold text-lg mb-4 text-black">Suscríbete a Novedades</h3>
+<form class="flex">
+<input type="email" placeholder="tu@email.com" class="w-full p-2 border border-r-0 rounded-l-lg focus:outline-none">
+<button type="submit" class="accent-color text-white px-4 rounded-r-lg">Enviar</button>
+</form>
+</div>
+<div>
+<h3 class="font-bold text-lg mb-4 text-black">Atención al Cliente</h3>
+<ul class="space-y-2">
+<li><a href="#" class="hover:underline">Preguntas Frecuentes</a></li>
+<li><a href="#" class="hover:underline">Política de Devoluciones</a></li>
+<li><a href="#" class="hover:underline">Términos y Condiciones</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-bold text-lg mb-4 text-black">Síguenos</h3>
+<div class="flex justify-center space-x-4 text-2xl">
+<a href="#" class="hover:text-black">📷</a>
+<a href="#" class="hover:text-black">📘</a>
+<a href="#" class="hover:text-black">📌</a>
+</div>
+</div>
+</div>
+<!-- Sección Nosotros -->
+<div class="mt-10 pt-10 border-t border-gray-200">
+<h3 class="font-bold text-lg mb-4 text-black">Sobre Esvi Atelier</h3>
+<p class="max-w-xl mx-auto text-gray-600">
+En Esvi Atelier, creemos que la moda es una expresión personal. Diseñamos prendas únicas y atemporales que combinan estilo, calidad y confort, para que te sientas increíble en cada momento. Nuestra misión es ofrecerte ropa que no solo sigua tendencias, sino que te permita crear tu propio estilo auténtico.
+</p>
+</div>
+<p class="mt-10 text-sm">&copy; 2025 Esvi Atelier. Todos los derechos reservados.</p>
+</footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+</div>
 
-            // ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT !
-            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx0Gko5IrOQGLS0VRp1OPxWNZcnxZw_N-7BSW-PGP3U6GR0iCfjjkhxmOK-jwg4_akvwA/exec';
+<script>
+document.addEventListener('DOMContentLoaded', () => {
 
-            const appState = {
-                products: [],
-                cart: [],
-                filters: {
-                    category: 'Todos',
-                    talla: [],
-                    color: [],
-                    tipo: [],
-                    maxPrice: 500,
-                    searchTerm: ''
-                },
-                currentView: 'home', // 'home' or 'catalog'
-                checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
-                // Datos del comprador (ejemplo, en una app real se recopilarían de los campos del formulario)
-                customerInfo: {
-                    fullName: '',
-                    email: '',
-                    address: '',
-                    city: '',
-                    zipCode: '',
-                    phone: '',
-                    pickupName: '',
-                    pickupEmail: ''
-                },
-                paymentInfo: {
-                    paymentMethod: '',
-                    paymentNumber: '',
-                    paymentDate: '',
-                    paymentTime: ''
-                }
-            };
+// ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT !
+            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzMA7X8bEPiCRhkWNzgrGPjGDw-6kzY0IAowNHeRk77UENewVlz0O50Y23i8j-GKaYkVQ/exec';
+            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbwFic93InkKZEFTbrKW2LPzZ-endtVSM6uALirhos_8SKZhOWYwysWyseqiOvAztiELCw/exec';
 
-            const mockProducts = [
-                { id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino+Hombre', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
-                { id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino+Hombre', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
-                { id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XS', 'S', 'M'], colors: ['Beige', 'Blanco'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral+Mujer', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
-                { id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['M', 'L'], colors: ['Beige', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca+Mujer', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
-                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
-                { id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['S', 'M'], colors: ['Beige', 'Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny+Mujer', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
-                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
-                { id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['S', 'M', 'L'], colors: ['Negro', 'Beige'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi+Mujer', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'},
-                { id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['XS', 'S', 'M'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'}
-            ];
-            
-            appState.products = mockProducts;
+const appState = {
+products: [],
+cart: [],
+filters: {
+category: 'Todos',
+talla: [],
+color: [],
+tipo: [],
+maxPrice: 500,
+searchTerm: ''
+},
+currentView: 'home', // 'home' or 'catalog'
+checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
+// Datos del comprador (ejemplo, en una app real se recopilarían de los campos del formulario)
+customerInfo: {
+fullName: '',
+email: '',
+address: '',
+city: '',
+zipCode: '',
+phone: '',
+pickupName: '',
+pickupEmail: ''
+},
+paymentInfo: {
+paymentMethod: '',
+paymentNumber: '',
+paymentDate: '',
+paymentTime: ''
+}
+};
 
-            const productGrid = document.getElementById('product-grid');
-            const noResultsDiv = document.getElementById('no-results');
-            const categoryTitle = document.getElementById('category-title');
-            const priceSlider = document.getElementById('price-slider');
-            const priceValue = document.getElementById('price-value');
-            const clearFiltersBtn = document.getElementById('clear-filters-btn');
-            const searchBar = document.getElementById('search-bar');
-            const landingPage = document.getElementById('landing-page');
-            const mainContent = document.getElementById('main-content');
-            const exploreCatalogBtn = document.getElementById('explore-catalog-btn');
-            const bodyElement = document.body;
-            
-            const productModal = document.getElementById('product-modal');
-            const productModalContent = document.getElementById('product-modal-content');
+const mockProducts = [
+{ id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino+Hombre', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
+{ id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino+Hombre', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
+{ id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XS', 'S', 'M'], colors: ['Beige', 'Blanco'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral+Mujer', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
+{ id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['M', 'L'], colors: ['Beige', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca+Mujer', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
+{ id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
+{ id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['S', 'M'], colors: ['Beige', 'Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny+Mujer', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
+{ id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
+{ id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['S', 'M', 'L'], colors: ['Negro', 'Beige'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi+Mujer', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'},
+{ id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['XS', 'S', 'M'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'}
+];
 
-            const cartPanel = document.getElementById('cart-panel');
-            const cartBtn = document.getElementById('cart-btn');
-            const closeCartBtn = document.getElementById('close-cart-btn');
-            const cartItemsContainer = document.getElementById('cart-items-container');
-            const cartSubtotalEl = document.getElementById('cart-subtotal');
-            const cartCountEl = document = document.getElementById('cart-count');
+appState.products = mockProducts;
 
-            const checkoutBtn = document.getElementById('checkout-btn');
-            const checkoutModal = document.getElementById('checkout-modal');
-            const checkoutModalContent = document.getElementById('checkout-modal-content');
-            
-            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-            const mobileMenu = document.getElementById('mobile-menu');
+const productGrid = document.getElementById('product-grid');
+const noResultsDiv = document.getElementById('no-results');
+const categoryTitle = document.getElementById('category-title');
+const priceSlider = document.getElementById('price-slider');
+const priceValue = document.getElementById('price-value');
+const clearFiltersBtn = document.getElementById('clear-filters-btn');
+const searchBar = document.getElementById('search-bar');
+const landingPage = document.getElementById('landing-page');
+const mainContent = document.getElementById('main-content');
+const exploreCatalogBtn = document.getElementById('explore-catalog-btn');
+const bodyElement = document.body;
 
-            const updateBodyClass = (category) => {
-                bodyElement.className = ''; // Limpia todas las clases de categoría existentes
-                let className = 'antialiased ';
-                if (category === 'Hombre') {
-                    className += 'category-hombre';
-                } else if (category === 'Mujer') {
-                    className += 'category-mujer';
-                } else if (category === 'Infantil') {
-                    className += 'category-infantil';
-                } else if (category === 'Ofertas' || category === 'Novedades') {
-                    className += 'category-ofertas'; // Usamos la misma clase para ambos por ahora
-                } else if (category === 'Todos' || category === 'Catalogo') {
-                    className += 'category-todos';
-                } else { // Home page
-                    className += 'category-home';
-                }
-                bodyElement.className = className;
-            };
+const productModal = document.getElementById('product-modal');
+const productModalContent = document.getElementById('product-modal-content');
 
-            const showCatalog = () => {
-                landingPage.classList.add('hidden');
-                mainContent.classList.remove('hidden');
-                appState.currentView = 'catalog';
-                updateBodyClass(appState.filters.category); // Aplicar clase de categoría inicial al mostrar catálogo
-                renderProducts(); // Renderizar productos al mostrar el catálogo
-            };
+const cartPanel = document.getElementById('cart-panel');
+const cartBtn = document.getElementById('cart-btn');
+const closeCartBtn = document.getElementById('close-cart-btn');
+const cartItemsContainer = document.getElementById('cart-items-container');
+const cartSubtotalEl = document.getElementById('cart-subtotal');
+const cartCountEl = document = document.getElementById('cart-count');
 
-            const showHome = () => {
-                landingPage.classList.remove('hidden');
-                mainContent.classList.add('hidden');
-                appState.currentView = 'home';
-                updateBodyClass('home'); // Asegurar clase de home
-                // Resetear filtros si es necesario, o mantener para próxima visita al catálogo
-            };
+const checkoutBtn = document.getElementById('checkout-btn');
+const checkoutModal = document.getElementById('checkout-modal');
+const checkoutModalContent = document.getElementById('checkout-modal-content');
+
+const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+
+const updateBodyClass = (category) => {
+bodyElement.className = ''; // Limpia todas las clases de categoría existentes
+let className = 'antialiased ';
+if (category === 'Hombre') {
+className += 'category-hombre';
+} else if (category === 'Mujer') {
+className += 'category-mujer';
+} else if (category === 'Infantil') {
+className += 'category-infantil';
+} else if (category === 'Ofertas' || category === 'Novedades') {
+className += 'category-ofertas'; // Usamos la misma clase para ambos por ahora
+} else if (category === 'Todos' || category === 'Catalogo') {
+className += 'category-todos';
+} else { // Home page
+className += 'category-home';
+}
+bodyElement.className = className;
+};
+
+const showCatalog = () => {
+landingPage.classList.add('hidden');
+mainContent.classList.remove('hidden');
+appState.currentView = 'catalog';
+updateBodyClass(appState.filters.category); // Aplicar clase de categoría inicial al mostrar catálogo
+renderProducts(); // Renderizar productos al mostrar el catálogo
+};
+
+const showHome = () => {
+landingPage.classList.remove('hidden');
+mainContent.classList.add('hidden');
+appState.currentView = 'home';
+updateBodyClass('home'); // Asegurar clase de home
+// Resetear filtros si es necesario, o mantener para próxima visita al catálogo
+};
 
 
-            const renderProducts = () => {
-                productGrid.innerHTML = '';
-                let filteredProducts = [...appState.products];
+const renderProducts = () => {
+productGrid.innerHTML = '';
+let filteredProducts = [...appState.products];
 
-                // Filtro por categoría principal (Hombre, Mujer, Infantil, Ofertas, Novedades)
-                if (appState.filters.category !== 'Todos' && appState.filters.category !== 'Catalogo') {
-                    if (appState.filters.category === 'Ofertas') {
-                        filteredProducts = filteredProducts.filter(p => p.onSale);
-                    } else if (appState.filters.category === 'Novedades') {
-                        filteredProducts = filteredProducts.filter(p => p.novelty);
-                    } else {
-                        filteredProducts = filteredProducts.filter(p => p.category === appState.filters.category);
-                    }
-                }
+// Filtro por categoría principal (Hombre, Mujer, Infantil, Ofertas, Novedades)
+if (appState.filters.category !== 'Todos' && appState.filters.category !== 'Catalogo') {
+if (appState.filters.category === 'Ofertas') {
+filteredProducts = filteredProducts.filter(p => p.onSale);
+} else if (appState.filters.category === 'Novedades') {
+filteredProducts = filteredProducts.filter(p => p.novelty);
+} else {
+filteredProducts = filteredProducts.filter(p => p.category === appState.filters.category);
+}
+}
 
-                if (appState.filters.talla.length > 0) {
-                    filteredProducts = filteredProducts.filter(p => p.sizes.some(s => appState.filters.talla.includes(s)));
-                }
-                
-                if (appState.filters.color.length > 0) {
-                    filteredProducts = filteredProducts.filter(p => p.colors.some(c => appState.filters.color.includes(c)));
-                }
-                
-                if (appState.filters.tipo.length > 0) {
-                    filteredProducts = filteredProducts.filter(p => appState.filters.tipo.includes(p.tipo));
-                }
+if (appState.filters.talla.length > 0) {
+filteredProducts = filteredProducts.filter(p => p.sizes.some(s => appState.filters.talla.includes(s)));
+}
 
-                filteredProducts = filteredProducts.filter(p => p.price <= appState.filters.maxPrice);
+if (appState.filters.color.length > 0) {
+filteredProducts = filteredProducts.filter(p => p.colors.some(c => appState.filters.color.includes(c)));
+}
 
-                if (appState.filters.searchTerm) {
-                    filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()));
-                }
+if (appState.filters.tipo.length > 0) {
+filteredProducts = filteredProducts.filter(p => appState.filters.tipo.includes(p.tipo));
+}
 
-                if (filteredProducts.length === 0) {
-                    noResultsDiv.classList.remove('hidden');
-                    productGrid.classList.add('hidden');
-                } else {
-                    noResultsDiv.classList.add('hidden');
-                    productGrid.classList.remove('hidden');
-                    filteredProducts.forEach(product => {
-                        const card = document.createElement('div');
-                        card.className = 'bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer group';
-                        card.dataset.productId = product.id;
-                        card.innerHTML = `
-                            <div class="relative">
-                                <img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover">
-                                ${product.onSale ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">OFERTA</span>' : ''}
-                                ${product.novelty ? '<span class="absolute top-2 right-2 accent-color text-white text-xs px-2 py-1 rounded">NUEVO</span>' : ''}
-                                <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-40 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                    <h3 class="font-bold text-lg">${product.name}</h3>
-                                    <p class="text-md">S/ ${product.price.toFixed(2)}</p>
-                                </div>
-                            </div>
-                        `;
-                        productGrid.appendChild(card);
-                    });
-                }
-            };
-            
-            const openProductModal = (productId) => {
-                const product = appState.products.find(p => p.id == productId);
-                if (!product) return;
+filteredProducts = filteredProducts.filter(p => p.price <= appState.filters.maxPrice);
 
-                productModalContent.innerHTML = `
-                    <div class="flex flex-col md:flex-row h-full">
-                        <div class="md:w-1/2 h-1/2 md:h-full bg-cover bg-center" style="background-image: url('${product.image}')"></div>
-                        <div class="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto no-scrollbar">
-                            <div class="flex-grow">
-                                <div class="flex justify-between items-start">
-                                    <h2 class="text-3xl font-bold mb-2">${product.name}</h2>
-                                    <button id="close-modal-btn" class="text-3xl font-light">&times;</button>
-                                </div>
-                                <p class="text-2xl accent-color-text font-bold mb-4">S/ ${product.price.toFixed(2)}</p>
-                                <p class="text-gray-600 mb-6">${product.description}</p>
-                                
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-2">Talla:</h4>
-                                    <div class="flex flex-wrap gap-2">
-                                        ${product.sizes.map(size => `<label><input type="radio" name="size" value="${size}" class="sr-only peer"><span class="px-4 py-2 border rounded-lg cursor-pointer peer-checked:bg-gray-800 peer-checked:text-white">${size}</span></label>`).join('')}
-                                    </div>
-                                </div>
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-2">Color:</h4>
-                                     <div class="flex flex-wrap gap-3">
-                                        ${product.colors.map(color => `<label><input type="radio" name="color" value="${color}" class="sr-only peer"><span class="h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-800 block cursor-pointer" style="background-color: ${color.toLowerCase() === 'blanco' ? 'white' : color.toLowerCase()}; border-color: ${color.toLowerCase() === 'blanco' ? '#ccc' : 'transparent'};"></span></label>`).join('')}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-auto">
-                                <button data-product-id="${product.id}" class="add-to-cart-btn w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
-                                    Agregar al Carrito
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                
-                productModal.classList.remove('opacity-0', 'pointer-events-none');
-                productModalContent.classList.remove('scale-95');
+if (appState.filters.searchTerm) {
+filteredProducts = filteredProducts.filter(p => p.name.toLowerCase().includes(appState.filters.searchTerm.toLowerCase()));
+}
 
-                document.getElementById('close-modal-btn').addEventListener('click', () => {
-                    productModal.classList.add('opacity-0', 'pointer-events-none');
-                    productModalContent.classList.add('scale-95');
-                });
+if (filteredProducts.length === 0) {
+noResultsDiv.classList.remove('hidden');
+productGrid.classList.add('hidden');
+} else {
+noResultsDiv.classList.add('hidden');
+productGrid.classList.remove('hidden');
+filteredProducts.forEach(product => {
+const card = document.createElement('div');
+card.className = 'bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 cursor-pointer group';
+card.dataset.productId = product.id;
+card.innerHTML = `
+                           <div class="relative">
+                               <img src="${product.image}" alt="${product.name}" class="w-full h-64 object-cover">
+                               ${product.onSale ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded">OFERTA</span>' : ''}
+                               ${product.novelty ? '<span class="absolute top-2 right-2 accent-color text-white text-xs px-2 py-1 rounded">NUEVO</span>' : ''}
+                               <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-40 p-4 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                   <h3 class="font-bold text-lg">${product.name}</h3>
+                                   <p class="text-md">S/ ${product.price.toFixed(2)}</p>
+                               </div>
+                           </div>
+                       `;
+productGrid.appendChild(card);
+});
+}
+};
 
-                document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
-                    const selectedSize = document.querySelector('input[name="size"]:checked');
-                    const selectedColor = document.querySelector('input[name="color"]:checked');
-                    if (!selectedSize || !selectedColor) {
-                        const messageBox = document.createElement('p');
-                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
-                        messageBox.textContent = 'Por favor, selecciona talla y color.';
-                        e.target.parentNode.insertBefore(messageBox, e.target);
-                        setTimeout(() => messageBox.remove(), 3000);
-                        return;
-                    }
-                    addToCart(product.id, selectedSize.value, selectedColor.value);
-                    productModal.classList.add('opacity-0', 'pointer-events-none');
-                    productModalContent.classList.add('scale-95');
-                    openCartPanel();
-                });
-            };
+const openProductModal = (productId) => {
+const product = appState.products.find(p => p.id == productId);
+if (!product) return;
 
-            const renderCart = () => {
-                cartItemsContainer.innerHTML = '';
-                if(appState.cart.length === 0) {
-                    cartItemsContainer.innerHTML = '<p class="text-gray-500 text-center">Tu carrito está vacío.</p>';
-                    checkoutBtn.disabled = true;
-                    checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                } else {
-                    let subtotal = 0;
-                    appState.cart.forEach(item => {
-                        const product = appState.products.find(p => p.id === item.id);
-                        subtotal += product.price * item.quantity;
-                        const cartItemEl = document.createElement('div');
-                        cartItemEl.className = 'flex gap-4 mb-4';
-                        cartItemEl.innerHTML = `
-                            <img src="${product.image}" alt="${product.name}" class="w-20 h-24 object-cover rounded-lg">
-                            <div class="flex-grow">
-                                <h4 class="font-bold">${product.name}</h4>
-                                <p class="text-sm text-gray-500">Talla: ${item.size}, Color: ${item.color}</p>
-                                <p class="font-bold text-lg">S/ ${(product.price * item.quantity).toFixed(2)}</p>
-                            </div>
-                            <div class="flex flex-col items-center justify-between">
-                                <button class="cart-item-remove text-red-500 text-xl" data-item-id="${item.itemId}">&times;</button>
-                                <div class="flex items-center border rounded-lg">
-                                    <button class="cart-quantity-change px-2" data-item-id="${item.itemId}" data-change="-1">-</button>
-                                    <span class="px-2">${item.quantity}</span>
-                                    <button class="cart-quantity-change px-2" data-item-id="${item.itemId}" data-change="1">+</button>
-                                </div>
-                            </div>
-                        `;
-                        cartItemsContainer.appendChild(cartItemEl);
-                    });
-                    cartSubtotalEl.textContent = `S/ ${subtotal.toFixed(2)}`;
-                    checkoutBtn.disabled = false;
-                    checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-                }
-                cartCountEl.textContent = appState.cart.reduce((total, item) => total + item.quantity, 0);
-            };
+productModalContent.innerHTML = `
+                   <div class="flex flex-col md:flex-row h-full">
+                       <div class="md:w-1/2 h-1/2 md:h-full bg-cover bg-center" style="background-image: url('${product.image}')"></div>
+                       <div class="md:w-1/2 p-6 md:p-8 flex flex-col overflow-y-auto no-scrollbar">
+                           <div class="flex-grow">
+                               <div class="flex justify-between items-start">
+                                   <h2 class="text-3xl font-bold mb-2">${product.name}</h2>
+                                   <button id="close-modal-btn" class="text-3xl font-light">&times;</button>
+                               </div>
+                               <p class="text-2xl accent-color-text font-bold mb-4">S/ ${product.price.toFixed(2)}</p>
+                               <p class="text-gray-600 mb-6">${product.description}</p>
+                               
+                               <div class="mb-6">
+                                   <h4 class="font-bold mb-2">Talla:</h4>
+                                   <div class="flex flex-wrap gap-2">
+                                       ${product.sizes.map(size => `<label><input type="radio" name="size" value="${size}" class="sr-only peer"><span class="px-4 py-2 border rounded-lg cursor-pointer peer-checked:bg-gray-800 peer-checked:text-white">${size}</span></label>`).join('')}
+                                   </div>
+                               </div>
+                               <div class="mb-6">
+                                   <h4 class="font-bold mb-2">Color:</h4>
+                                    <div class="flex flex-wrap gap-3">
+                                       ${product.colors.map(color => `<label><input type="radio" name="color" value="${color}" class="sr-only peer"><span class="h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-800 block cursor-pointer" style="background-color: ${color.toLowerCase() === 'blanco' ? 'white' : color.toLowerCase()}; border-color: ${color.toLowerCase() === 'blanco' ? '#ccc' : 'transparent'};"></span></label>`).join('')}
+                                   </div>
+                               </div>
+                           </div>
+                           <div class="mt-auto">
+                               <button data-product-id="${product.id}" class="add-to-cart-btn w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
+                                   Agregar al Carrito
+                               </button>
+                           </div>
+                       </div>
+                   </div>
+               `;
 
-            const addToCart = (productId, size, color) => {
-                const existingItemIndex = appState.cart.findIndex(item => item.id === productId && item.size === size && item.color === color);
-                if(existingItemIndex > -1) {
-                    appState.cart[existingItemIndex].quantity++;
-                } else {
-                    appState.cart.push({
-                        itemId: Date.now(), // Unique ID for each cart item instance
-                        id: productId,
-                        quantity: 1,
-                        size,
-                        color
-                    });
-                }
-                renderCart();
-            };
+productModal.classList.remove('opacity-0', 'pointer-events-none');
+productModalContent.classList.remove('scale-95');
 
-            const updateCartQuantity = (itemId, change) => {
-                const itemIndex = appState.cart.findIndex(item => item.itemId == itemId);
-                if (itemIndex > -1) {
-                    appState.cart[itemIndex].quantity += change;
-                    if (appState.cart[itemIndex].quantity <= 0) {
-                        appState.cart.splice(itemIndex, 1);
-                    }
-                }
-                renderCart();
-            };
-            
-            const renderCheckout = (step = 1) => {
-                closeCartPanel();
-                let content = '';
-                const subtotal = appState.cart.reduce((sum, item) => {
-                    const product = appState.products.find(p => p.id === item.id);
-                    return sum + (product.price * item.quantity);
-                }, 0);
-                const shippingCost = appState.checkoutShippingMethod === 'delivery' ? 10 : 0; // S/10 for delivery, S/0 for pickup
-                const total = subtotal + shippingCost;
+document.getElementById('close-modal-btn').addEventListener('click', () => {
+productModal.classList.add('opacity-0', 'pointer-events-none');
+productModalContent.classList.add('scale-95');
+});
 
-                if (step === 1) { // Información de Envío
-                    content = `
+document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
+const selectedSize = document.querySelector('input[name="size"]:checked');
+const selectedColor = document.querySelector('input[name="color"]:checked');
+if (!selectedSize || !selectedColor) {
+const messageBox = document.createElement('p');
+messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+messageBox.textContent = 'Por favor, selecciona talla y color.';
+e.target.parentNode.insertBefore(messageBox, e.target);
+setTimeout(() => messageBox.remove(), 3000);
+return;
+}
+addToCart(product.id, selectedSize.value, selectedColor.value);
+productModal.classList.add('opacity-0', 'pointer-events-none');
+productModalContent.classList.add('scale-95');
+openCartPanel();
+});
+};
+
+const renderCart = () => {
+cartItemsContainer.innerHTML = '';
+if(appState.cart.length === 0) {
+cartItemsContainer.innerHTML = '<p class="text-gray-500 text-center">Tu carrito está vacío.</p>';
+checkoutBtn.disabled = true;
+checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+} else {
+let subtotal = 0;
+appState.cart.forEach(item => {
+const product = appState.products.find(p => p.id === item.id);
+subtotal += product.price * item.quantity;
+const cartItemEl = document.createElement('div');
+cartItemEl.className = 'flex gap-4 mb-4';
+cartItemEl.innerHTML = `
+                           <img src="${product.image}" alt="${product.name}" class="w-20 h-24 object-cover rounded-lg">
+                           <div class="flex-grow">
+                               <h4 class="font-bold">${product.name}</h4>
+                               <p class="text-sm text-gray-500">Talla: ${item.size}, Color: ${item.color}</p>
+                               <p class="font-bold text-lg">S/ ${(product.price * item.quantity).toFixed(2)}</p>
+                           </div>
+                           <div class="flex flex-col items-center justify-between">
+                               <button class="cart-item-remove text-red-500 text-xl" data-item-id="${item.itemId}">&times;</button>
+                               <div class="flex items-center border rounded-lg">
+                                   <button class="cart-quantity-change px-2" data-item-id="${item.itemId}" data-change="-1">-</button>
+                                   <span class="px-2">${item.quantity}</span>
+                                   <button class="cart-quantity-change px-2" data-item-id="${item.itemId}" data-change="1">+</button>
+                               </div>
+                           </div>
+                       `;
+cartItemsContainer.appendChild(cartItemEl);
+});
+cartSubtotalEl.textContent = `S/ ${subtotal.toFixed(2)}`;
+checkoutBtn.disabled = false;
+checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+}
+cartCountEl.textContent = appState.cart.reduce((total, item) => total + item.quantity, 0);
+};
+
+const addToCart = (productId, size, color) => {
+const existingItemIndex = appState.cart.findIndex(item => item.id === productId && item.size === size && item.color === color);
+if(existingItemIndex > -1) {
+appState.cart[existingItemIndex].quantity++;
+} else {
+appState.cart.push({
+itemId: Date.now(), // Unique ID for each cart item instance
+id: productId,
+quantity: 1,
+size,
+color
+});
+}
+renderCart();
+};
+
+const updateCartQuantity = (itemId, change) => {
+const itemIndex = appState.cart.findIndex(item => item.itemId == itemId);
+if (itemIndex > -1) {
+appState.cart[itemIndex].quantity += change;
+if (appState.cart[itemIndex].quantity <= 0) {
+appState.cart.splice(itemIndex, 1);
+}
+}
+renderCart();
+};
+
+const renderCheckout = (step = 1) => {
+closeCartPanel();
+let content = '';
+const subtotal = appState.cart.reduce((sum, item) => {
+const product = appState.products.find(p => p.id === item.id);
+return sum + (product.price * item.quantity);
+}, 0);
+const shippingCost = appState.checkoutShippingMethod === 'delivery' ? 10 : 0; // S/10 for delivery, S/0 for pickup
+const total = subtotal + shippingCost;
+
+if (step === 1) { // Información de Envío
+content = `
+                       <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
+                       <h2 class="text-3xl font-bold mb-2">Checkout</h2>
+                       <div class="text-sm text-gray-500 mb-6">Paso 1 de 3: Información de Envío</div>
+                       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                           <div>
+                               <form id="shipping-form">
+                                   <div class="mb-6">
+                                       <h3 class="font-bold mb-2">Método de Entrega:</h3>
+                                       <div class="flex gap-4">
+                                           <label class="flex items-center space-x-2">
+                                               <input type="radio" name="deliveryMethod" value="delivery" class="accent-color" ${appState.checkoutShippingMethod === 'delivery' ? 'checked' : ''}>
+                                               <span>Envío a domicilio (S/ 10.00)</span>
+                                           </label>
+                                           <label class="flex items-center space-x-2">
+                                               <input type="radio" name="deliveryMethod" value="pickup" class="accent-color" ${appState.checkoutShippingMethod === 'pickup' ? 'checked' : ''}>
+                                               <span>Recoger en tienda (Gratis)</span>
+                                           </label>
+                                       </div>
+                                   </div>
+
+                                   ${appState.checkoutShippingMethod === 'delivery' ? `
+                                   <div class="space-y-4">
+                                       <input type="text" id="shipping-fullName" placeholder="Nombre completo" value="${appState.customerInfo.fullName}" class="w-full p-3 border rounded-lg" required>
+                                       <input type="email" id="shipping-email" placeholder="Correo electrónico" value="${appState.customerInfo.email}" class="w-full p-3 border rounded-lg" required>
+                                       <input type="text" id="shipping-address" placeholder="Dirección" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
+                                       <div class="flex gap-4">
+                                           <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
+                                           <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
+                                       </div>
+                                       <input type="tel" id="shipping-phone" placeholder="Teléfono" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required>
+                                   </div>
+                                   ` : `
+                                   <div class="space-y-4">
+                                       <p class="text-gray-700">Puedes recoger tu pedido en nuestra tienda física:</p>
+                                       <p class="font-semibold">Esvi Atelier - Av. Principal 123, Miraflores, Lima.</p>
+                                       <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
+                                       <input type="text" id="pickup-name" placeholder="Nombre completo para recoger" value="${appState.customerInfo.pickupName}" class="w-full p-3 border rounded-lg" required>
+                                       <input type="email" id="pickup-email" placeholder="Correo electrónico de contacto" value="${appState.customerInfo.pickupEmail}" class="w-full p-3 border rounded-lg" required>
+                                   </div>
+                                   `}
+                                   <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
+                               </form>
+                           </div>
+                           <div class="bg-gray-50 p-6 rounded-lg">
+                               <h3 class="font-bold text-xl mb-4">Resumen de tu Orden</h3>
+                               <!-- Resumen de productos -->
+                               <div class="space-y-2 mb-4 border-b pb-4">
+                                   ${appState.cart.map(item => {
+                                       const product = appState.products.find(p => p.id === item.id);
+                                       return `<div class="flex justify-between text-sm"><span class="truncate pr-4">${item.quantity} x ${product.name}</span><span>S/ ${(product.price * item.quantity).toFixed(2)}</span></div>`;
+                                   }).join('')}
+                               </div>
+                               <div class="space-y-1">
+                                   <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
+                                   <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
+                                   <div class="flex justify-between font-bold text-lg mt-2"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
+                               </div>
+                           </div>
+                       </div>
+                   `;
+} else if (step === 2) { // Revisión de pedido
+content = `
                         <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
-                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
-                        <div class="text-sm text-gray-500 mb-6">Paso 1 de 3: Información de Envío</div>
+                       <h2 class="text-3xl font-bold mb-2">Checkout</h2>
+                       <div class="text-sm text-gray-500 mb-6">Paso 2 de 3: Revisión de Pedido</div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <form id="shipping-form">
-                                    <div class="mb-6">
-                                        <h3 class="font-bold mb-2">Método de Entrega:</h3>
-                                        <div class="flex gap-4">
-                                            <label class="flex items-center space-x-2">
-                                                <input type="radio" name="deliveryMethod" value="delivery" class="accent-color" ${appState.checkoutShippingMethod === 'delivery' ? 'checked' : ''}>
-                                                <span>Envío a domicilio (S/ 10.00)</span>
-                                            </label>
-                                            <label class="flex items-center space-x-2">
-                                                <input type="radio" name="deliveryMethod" value="pickup" class="accent-color" ${appState.checkoutShippingMethod === 'pickup' ? 'checked' : ''}>
-                                                <span>Recoger en tienda (Gratis)</span>
-                                            </label>
-                                        </div>
-                                    </div>
+                           <div>
+                               <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                                   <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
+                                   ${appState.checkoutShippingMethod === 'delivery' ? `
+                                       <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Teléfono: ${appState.customerInfo.phone}</p>
+                                   ` : `
+                                       <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
+                                       <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}</p>
+                                   `}
+                                   <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
+                               </div>
+                               <h3 class="font-bold text-xl mb-4">Items del Pedido</h3>
+                                <div class="space-y-4">
+                                   ${appState.cart.map(item => {
+                                       const product = appState.products.find(p => p.id === item.id);
+                                       return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">${item.size}, ${item.color}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
+                                   }).join('')}
+                               </div>
+                           </div>
+                           <div class="bg-gray-50 p-6 rounded-lg">
+                               <h3 class="font-bold text-xl mb-4">Resumen Final</h3>
+                                <div class="space-y-1 mb-6 border-b pb-4">
+                                   <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
+                                   <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
+                               </div>
+                               <div class="flex justify-between font-bold text-lg mb-6"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
+                               <button id="to-payment-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Pago</button>
+                           </div>
+                       </div>
+                   `;
+} else if (step === 3) { // Pago
+const productDescriptions = appState.cart.map(item => {
+const product = appState.products.find(p => p.id === item.id);
+return `${item.quantity} x ${product.name} (Talla: ${item.size}, Color: ${item.color}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
+}).join(', ');
 
-                                    ${appState.checkoutShippingMethod === 'delivery' ? `
-                                    <div class="space-y-4">
-                                        <input type="text" id="shipping-fullName" placeholder="Nombre completo" value="${appState.customerInfo.fullName}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="email" id="shipping-email" placeholder="Correo electrónico" value="${appState.customerInfo.email}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="text" id="shipping-address" placeholder="Dirección" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
-                                        <div class="flex gap-4">
-                                            <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
-                                            <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
-                                        </div>
-                                        <input type="tel" id="shipping-phone" placeholder="Teléfono" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required>
-                                    </div>
-                                    ` : `
-                                    <div class="space-y-4">
-                                        <p class="text-gray-700">Puedes recoger tu pedido en nuestra tienda física:</p>
-                                        <p class="font-semibold">Esvi Atelier - Av. Principal 123, Miraflores, Lima.</p>
-                                        <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
-                                        <input type="text" id="pickup-name" placeholder="Nombre completo para recoger" value="${appState.customerInfo.pickupName}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="email" id="pickup-email" placeholder="Correo electrónico de contacto" value="${appState.customerInfo.pickupEmail}" class="w-full p-3 border rounded-lg" required>
-                                    </div>
-                                    `}
-                                    <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
-                                </form>
-                            </div>
-                            <div class="bg-gray-50 p-6 rounded-lg">
-                                <h3 class="font-bold text-xl mb-4">Resumen de tu Orden</h3>
-                                <!-- Resumen de productos -->
-                                <div class="space-y-2 mb-4 border-b pb-4">
-                                    ${appState.cart.map(item => {
-                                        const product = appState.products.find(p => p.id === item.id);
-                                        return `<div class="flex justify-between text-sm"><span class="truncate pr-4">${item.quantity} x ${product.name}</span><span>S/ ${(product.price * item.quantity).toFixed(2)}</span></div>`;
-                                    }).join('')}
-                                </div>
-                                <div class="space-y-1">
-                                    <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
-                                    <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
-                                    <div class="flex justify-between font-bold text-lg mt-2"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } else if (step === 2) { // Revisión de pedido
-                    content = `
-                         <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
-                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
-                        <div class="text-sm text-gray-500 mb-6">Paso 2 de 3: Revisión de Pedido</div>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                                <div class="bg-gray-50 p-6 rounded-lg mb-6">
-                                    <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
-                                    ${appState.checkoutShippingMethod === 'delivery' ? `
-                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Teléfono: ${appState.customerInfo.phone}</p>
-                                    ` : `
-                                        <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
-                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}</p>
-                                    `}
-                                    <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
-                                </div>
-                                <h3 class="font-bold text-xl mb-4">Items del Pedido</h3>
-                                 <div class="space-y-4">
-                                    ${appState.cart.map(item => {
-                                        const product = appState.products.find(p => p.id === item.id);
-                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">${item.size}, ${item.color}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
-                                    }).join('')}
-                                </div>
-                            </div>
-                            <div class="bg-gray-50 p-6 rounded-lg">
-                                <h3 class="font-bold text-xl mb-4">Resumen Final</h3>
-                                 <div class="space-y-1 mb-6 border-b pb-4">
-                                    <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
-                                    <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
-                                </div>
-                                <div class="flex justify-between font-bold text-lg mb-6"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
-                                <button id="to-payment-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Pago</button>
-                            </div>
-                        </div>
-                    `;
-                } else if (step === 3) { // Pago
-                    const productDescriptions = appState.cart.map(item => {
-                        const product = appState.products.find(p => p.id === item.id);
-                        return `${item.quantity} x ${product.name} (Talla: ${item.size}, Color: ${item.color}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
-                    }).join(', ');
+const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
+const emailBody = encodeURIComponent(`Hola,\n\nAdjunto el comprobante de pago de mi pedido en Esvi Atelier.\n\nProductos:\n${productDescriptions}\n\nTotal pagado: S/ ${total.toFixed(2)}\n\nGracias.`);
 
-                    const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
-                    const emailBody = encodeURIComponent(`Hola,\n\nAdjunto el comprobante de pago de mi pedido en Esvi Atelier.\n\nProductos:\n${productDescriptions}\n\nTotal pagado: S/ ${total.toFixed(2)}\n\nGracias.`);
-
-                    content = `
-                        <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
-                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
-                        <div class="text-sm text-gray-500 mb-6">Paso 3 de 3: Método de Pago</div>
-                        <div class="max-w-md mx-auto">
-                            <p class="text-center text-lg mb-4">Total a pagar: <span class="font-bold">S/ ${total.toFixed(2)}</span></p>
-                            <div class="space-y-4">
-                                <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="yapeplin" class="mr-2 accent-color" checked><span>Yape / Plin</span></label>
+content = `
+                       <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
+                       <h2 class="text-3xl font-bold mb-2">Checkout</h2>
+                       <div class="text-sm text-gray-500 mb-6">Paso 3 de 3: Método de Pago</div>
+                       <div class="max-w-md mx-auto">
+                           <p class="text-center text-lg mb-4">Total a pagar: <span class="font-bold">S/ ${total.toFixed(2)}</span></p>
+                           <div class="space-y-4">
+                               <div class="border p-4 rounded-lg">
+                                   <label class="font-bold flex items-center"><input type="radio" name="payment" value="yapeplin" class="mr-2 accent-color" checked><span>Yape / Plin</span></label>
+                                   <p class="text-sm text-gray-600 mt-2 ml-6">
+                                       Realiza tu pago a nuestro número de celular: <span class="font-semibold">987 654 321</span>.<br>
+                                       <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                   </p>
+                                   <div class="mt-4 ml-6 space-y-2">
+                                       <input type="text" id="payment-number-yapeplin" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                       <input type="date" id="payment-date-yapeplin" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
+                                       <input type="time" id="payment-time-yapeplin" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
+                                   </div>
+                               </div>
+                               <div class="border p-4 rounded-lg">
+                                   <label class="font-bold flex items-center"><input type="radio" name="payment" value="transferencia" class="mr-2 accent-color"><span>Transferencia Bancaria</span></label>
                                     <p class="text-sm text-gray-600 mt-2 ml-6">
-                                        Realiza tu pago a nuestro número de celular: <span class="font-semibold">987 654 321</span>.<br>
-                                        <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
-                                    </p>
-                                    <div class="mt-4 ml-6 space-y-2">
-                                        <input type="text" id="payment-number-yapeplin" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
-                                        <input type="date" id="payment-date-yapeplin" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
-                                        <input type="time" id="payment-time-yapeplin" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
-                                    </div>
-                                </div>
-                                <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="transferencia" class="mr-2 accent-color"><span>Transferencia Bancaria</span></label>
-                                     <p class="text-sm text-gray-600 mt-2 ml-6">
-                                        Realiza la transferencia a una de nuestras cuentas:<br>
-                                        <span class="font-semibold">BCP: 123-456789-0-12</span><br>
-                                        <span class="font-semibold">BBVA: 001-123-000456789</span><br>
-                                        <span class="font-semibold">Interbank: 890-1234567890</span><br>
-                                        <span class="text-red-500 font-semibold">¡IMPORTANTEl!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
-                                    </p>
-                                    <div class="mt-4 ml-6 space-y-2">
-                                        <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
-                                        <input type="date" id="payment-date-transferencia" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
-                                        <input type="time" id="payment-time-transferencia" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
-                                    </div>
-                                </div>
-                            </div>
-                             <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido</button>
-                        </div>
+                                       Realiza la transferencia a una de nuestras cuentas:<br>
+                                       <span class="font-semibold">BCP: 123-456789-0-12</span><br>
+                                       <span class="font-semibold">BBVA: 001-123-000456789</span><br>
+                                       <span class="font-semibold">Interbank: 890-1234567890</span><br>
+                                       <span class="text-red-500 font-semibold">¡IMPORTANTEl!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                   </p>
+                                   <div class="mt-4 ml-6 space-y-2">
+                                       <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                       <input type="date" id="payment-date-transferencia" value="${appState.paymentInfo.paymentDate}" class="w-full p-2 border rounded-lg">
+                                       <input type="time" id="payment-time-transferencia" value="${appState.paymentInfo.paymentTime}" class="w-full p-2 border rounded-lg">
+                                   </div>
+                               </div>
+                           </div>
+                            <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido</button>
+                       </div>
+                   `;
+} else if (step === 4) { // Confirmación
+content = `
+                       <div class="text-center py-20">
+                           <p class="text-6xl mb-4">🎉</p>
+                           <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra!</h2>
+                           <p class="text-gray-600 mb-6">Hemos recibido tu pedido. Recibirás un correo de confirmación pronto.</p>
+                           <p class="text-orange-600 font-semibold mb-8">Recuerda que, si tu método de pago lo requiere, debes enviar el número de operación, fecha y hora a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
+                           <button id="back-to-shop-btn" class="accent-color text-white px-8 py-3 rounded-lg">Seguir Comprando</button>
+                       </div>
                     `;
-                } else if (step === 4) { // Confirmación
-                     content = `
-                        <div class="text-center py-20">
-                            <p class="text-6xl mb-4">🎉</p>
-                            <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra!</h2>
-                            <p class="text-gray-600 mb-6">Hemos recibido tu pedido. Recibirás un correo de confirmación pronto.</p>
-                            <p class="text-orange-600 font-semibold mb-8">Recuerda que, si tu método de pago lo requiere, debes enviar el número de operación, fecha y hora a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
-                            <button id="back-to-shop-btn" class="accent-color text-white px-8 py-3 rounded-lg">Seguir Comprando</button>
-                        </div>
-                     `;
-                }
-                
-                checkoutModalContent.innerHTML = content;
-                checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
+}
 
-                document.getElementById('close-checkout-btn')?.addEventListener('click', closeCheckoutModal);
-                
-                const shippingForm = document.getElementById('shipping-form');
-                shippingForm?.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                    // Almacenar datos del cliente al avanzar al paso 2
-                    if (appState.checkoutShippingMethod === 'delivery') {
-                        appState.customerInfo.fullName = document.getElementById('shipping-fullName').value;
-                        appState.customerInfo.email = document.getElementById('shipping-email').value;
-                        appState.customerInfo.address = document.getElementById('shipping-address').value;
-                        appState.customerInfo.city = document.getElementById('shipping-city').value;
-                        appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
-                        appState.customerInfo.phone = document.getElementById('shipping-phone').value;
-                    } else {
-                        appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
-                        appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
-                    }
-                    renderCheckout(2);
-                });
+checkoutModalContent.innerHTML = content;
+checkoutModal.classList.remove('opacity-0', 'pointer-events-none');
 
-                document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
-                    radio.addEventListener('change', (e) => {
-                        appState.checkoutShippingMethod = e.target.value;
-                        renderCheckout(1); // Volver a renderizar para actualizar campos de envío
-                    });
-                });
-                
-                document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
+document.getElementById('close-checkout-btn')?.addEventListener('click', closeCheckoutModal);
 
-                document.getElementById('finish-order-btn')?.addEventListener('click', async () => {
-                    // Recolectar datos de pago antes de enviar
-                    const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
-                    if (!selectedPaymentMethodRadio) {
-                        const messageBox = document.createElement('p');
-                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
-                        messageBox.textContent = 'Por favor, selecciona un método de pago.';
-                        document.getElementById('finish-order-btn').parentNode.insertBefore(messageBox, document.getElementById('finish-order-btn'));
-                        setTimeout(() => messageBox.remove(), 3000);
-                        return;
-                    }
+const shippingForm = document.getElementById('shipping-form');
+shippingForm?.addEventListener('submit', (e) => {
+e.preventDefault();
+// Almacenar datos del cliente al avanzar al paso 2
+if (appState.checkoutShippingMethod === 'delivery') {
+appState.customerInfo.fullName = document.getElementById('shipping-fullName').value;
+appState.customerInfo.email = document.getElementById('shipping-email').value;
+appState.customerInfo.address = document.getElementById('shipping-address').value;
+appState.customerInfo.city = document.getElementById('shipping-city').value;
+appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
+appState.customerInfo.phone = document.getElementById('shipping-phone').value;
+} else {
+appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
+appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
+}
+renderCheckout(2);
+});
 
-                    appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value;
-                    let paymentNumberInput, paymentDateInput, paymentTimeInput;
+document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
+radio.addEventListener('change', (e) => {
+appState.checkoutShippingMethod = e.target.value;
+renderCheckout(1); // Volver a renderizar para actualizar campos de envío
+});
+});
 
-                    if (appState.paymentInfo.paymentMethod === 'yapeplin') {
-                        paymentNumberInput = document.getElementById('payment-number-yapeplin');
-                        paymentDateInput = document.getElementById('payment-date-yapeplin');
-                        paymentTimeInput = document.getElementById('payment-time-yapeplin');
-                    } else if (appState.paymentInfo.paymentMethod === 'transferencia') {
-                        paymentNumberInput = document.getElementById('payment-number-transferencia');
-                        paymentDateInput = document.getElementById('payment-date-transferencia');
-                        paymentTimeInput = document.getElementById('payment-time-transferencia');
-                    }
+document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
-                    appState.paymentInfo.paymentNumber = paymentNumberInput ? paymentNumberInput.value : '';
-                    appState.paymentInfo.paymentDate = paymentDateInput ? paymentDateInput.value : '';
-                    appState.paymentInfo.paymentTime = paymentTimeInput ? paymentTimeInput.value : '';
+document.getElementById('finish-order-btn')?.addEventListener('click', async () => {
+// Recolectar datos de pago antes de enviar
+const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
+if (!selectedPaymentMethodRadio) {
+const messageBox = document.createElement('p');
+messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+messageBox.textContent = 'Por favor, selecciona un método de pago.';
+document.getElementById('finish-order-btn').parentNode.insertBefore(messageBox, document.getElementById('finish-order-btn'));
+setTimeout(() => messageBox.remove(), 3000);
+return;
+}
 
-                    // Enviar datos del pedido a Google Apps Script
-                    const orderData = {
-                        timestamp: new Date().toLocaleString(),
-                        orderId: `ORD-${Date.now()}`, // ID único para el pedido
-                        customer: appState.customerInfo,
-                        deliveryMethod: appState.checkoutShippingMethod,
-                        items: appState.cart.map(item => {
-                            const product = appState.products.find(p => p.id === item.id);
-                            return {
-                                name: product.name,
-                                quantity: item.quantity,
-                                price: product.price,
-                                size: item.size,
-                                color: item.color
-                            };
-                        }),
-                        subtotal: subtotal.toFixed(2),
-                        shippingCost: shippingCost.toFixed(2),
-                        total: total.toFixed(2),
-                        payment: appState.paymentInfo
-                    };
+appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value;
+let paymentNumberInput, paymentDateInput, paymentTimeInput;
 
-                    try {
-                        const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
-                            method: 'POST',
-                            mode: 'no-cors', // Importante para Apps Script. No-cors para evitar errores de CORS.
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(orderData)
-                        });
-                        // Aunque 'no-cors' no permite leer la respuesta, la solicitud se envía.
-                        console.log('Pedido enviado a Google Apps Script (respuesta no legible por no-cors).');
-                        // Puedes añadir un indicador de éxito visual aquí si lo deseas.
+if (appState.paymentInfo.paymentMethod === 'yapeplin') {
+paymentNumberInput = document.getElementById('payment-number-yapeplin');
+paymentDateInput = document.getElementById('payment-date-yapeplin');
+paymentTimeInput = document.getElementById('payment-time-yapeplin');
+} else if (appState.paymentInfo.paymentMethod === 'transferencia') {
+paymentNumberInput = document.getElementById('payment-number-transferencia');
+paymentDateInput = document.getElementById('payment-date-transferencia');
+paymentTimeInput = document.getElementById('payment-time-transferencia');
+}
 
-                    } catch (error) {
-                        console.error('Error al enviar el pedido a Google Apps Script:', error);
-                        // Mensaje de error para el usuario si falla el envío
-                        const errorMessage = document.createElement('p');
-                        errorMessage.className = 'text-red-500 text-sm mt-2 text-center';
-                        errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
-                        document.getElementById('finish-order-btn').parentNode.insertBefore(errorMessage, document.getElementById('finish-order-btn'));
-                        setTimeout(() => errorMessage.remove(), 5000);
-                        return; // Detener el flujo si hay un error de envío
-                    }
+appState.paymentInfo.paymentNumber = paymentNumberInput ? paymentNumberInput.value : '';
+appState.paymentInfo.paymentDate = paymentDateInput ? paymentDateInput.value : '';
+appState.paymentInfo.paymentTime = paymentTimeInput ? paymentTimeInput.value : '';
 
-                    // Limpiar carrito y mostrar confirmación
-                    appState.cart = [];
-                    renderCart();
-                    renderCheckout(4);
-                });
-                
-                document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
-                    closeCheckoutModal();
-                    showHome(); // Volver a la página de portada
-                });
-            };
+// Enviar datos del pedido a Google Apps Script
+const orderData = {
+timestamp: new Date().toLocaleString(),
+orderId: `ORD-${Date.now()}`, // ID único para el pedido
+customer: appState.customerInfo,
+deliveryMethod: appState.checkoutShippingMethod,
+items: appState.cart.map(item => {
+const product = appState.products.find(p => p.id === item.id);
+return {
+name: product.name,
+quantity: item.quantity,
+price: product.price,
+size: item.size,
+color: item.color
+};
+}),
+subtotal: subtotal.toFixed(2),
+shippingCost: shippingCost.toFixed(2),
+total: total.toFixed(2),
+payment: appState.paymentInfo
+};
 
-            const openCartPanel = () => cartPanel.classList.remove('translate-x-full');
-            const closeCartPanel = () => cartPanel.classList.add('translate-x-full');
-            const closeCheckoutModal = () => checkoutModal.classList.add('opacity-0', 'pointer-events-none');
-            window.renderCheckout = renderCheckout; // Exponer para el botón "Editar" en el checkout
+try {
+const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+method: 'POST',
+mode: 'no-cors', // Importante para Apps Script. No-cors para evitar errores de CORS.
+headers: {
+'Content-Type': 'application/json',
+},
+body: JSON.stringify(orderData)
+});
+// Aunque 'no-cors' no permite leer la respuesta, la solicitud se envía.
+console.log('Pedido enviado a Google Apps Script (respuesta no legible por no-cors).');
+// Puedes añadir un indicador de éxito visual aquí si lo deseas.
 
-            document.querySelectorAll('.filter-checkbox').forEach(cb => {
-                cb.addEventListener('change', (e) => {
-                    const filterType = e.target.dataset.filter;
-                    const value = e.target.value;
-                    if (e.target.checked) {
-                        appState.filters[filterType].push(value);
-                    } else {
-                        appState.filters[filterType] = appState.filters[filterType].filter(item => item !== value);
-                    }
-                    renderProducts();
-                });
-            });
+} catch (error) {
+console.error('Error al enviar el pedido a Google Apps Script:', error);
+// Mensaje de error para el usuario si falla el envío
+const errorMessage = document.createElement('p');
+errorMessage.className = 'text-red-500 text-sm mt-2 text-center';
+errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
+document.getElementById('finish-order-btn').parentNode.insertBefore(errorMessage, document.getElementById('finish-order-btn'));
+setTimeout(() => errorMessage.remove(), 5000);
+return; // Detener el flujo si hay un error de envío
+}
 
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const category = e.target.dataset.category;
-                    appState.filters.category = category;
-                    categoryTitle.textContent = category === 'Catalogo' ? 'Todos los Productos' : category;
-                    
-                    if (category === 'Catalogo') {
-                        appState.filters.category = 'Todos'; // Resetear a 'Todos' los productos para el catálogo general
-                        categoryTitle.textContent = 'Todos los Productos';
-                        showCatalog();
-                    } else {
-                        showCatalog(); // Asegurarse de que el catálogo esté visible al seleccionar una categoría
-                    }
-                    updateBodyClass(category); // Actualiza la clase del body para el color
+// Limpiar carrito y mostrar confirmación
+appState.cart = [];
+renderCart();
+renderCheckout(4);
+});
 
-                    if(mobileMenu.classList.contains('block')) {
-                        mobileMenu.classList.remove('block');
-                        mobileMenu.classList.add('hidden');
-                    }
-                });
-            });
-            
-            document.getElementById('logo-btn').addEventListener('click', (e) => {
-                 e.preventDefault();
-                 showHome(); // Volver a la página de portada al hacer clic en el logo
-                 appState.filters.category = 'Todos'; // Resetear categoría de filtro
-                 categoryTitle.textContent = 'Todos los Productos';
-                 // Limpiar filtros al volver a la página de inicio
-                 document.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
-                 priceSlider.value = 500;
-                 priceValue.textContent = 'S/ 500';
-                 appState.filters.talla = [];
-                 appState.filters.color = [];
-                 appState.filters.tipo = [];
-                 appState.filters.maxPrice = 500;
-                 appState.filters.searchTerm = '';
-                 searchBar.value = '';
-            });
+document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
+closeCheckoutModal();
+showHome(); // Volver a la página de portada
+});
+};
 
-            priceSlider.addEventListener('input', (e) => {
-                appState.filters.maxPrice = parseInt(e.target.value);
-                priceValue.textContent = `S/ ${e.target.value}`;
-                renderProducts();
-            });
-            
-            searchBar.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    if (appState.currentView === 'home') {
-                        showCatalog(); // Mostrar el catálogo si se busca desde la portada
-                    }
-                    appState.filters.searchTerm = searchBar.value;
-                    renderProducts();
-                }
-            });
+const openCartPanel = () => cartPanel.classList.remove('translate-x-full');
+const closeCartPanel = () => cartPanel.classList.add('translate-x-full');
+const closeCheckoutModal = () => checkoutModal.classList.add('opacity-0', 'pointer-events-none');
+window.renderCheckout = renderCheckout; // Exponer para el botón "Editar" en el checkout
 
-            clearFiltersBtn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
-                priceSlider.value = 500;
-                priceValue.textContent = 'S/ 500';
-                appState.filters.talla = [];
-                appState.filters.color = [];
-                appState.filters.tipo = [];
-                appState.filters.maxPrice = 500;
-                appState.filters.searchTerm = ''; // Limpiar término de búsqueda
-                searchBar.value = ''; // Limpiar barra de búsqueda
-                renderProducts();
-            });
-            
-            productGrid.addEventListener('click', (e) => {
-                const card = e.target.closest('.group');
-                if (card) {
-                    openProductModal(card.dataset.productId);
-                }
-            });
-            
-            cartBtn.addEventListener('click', openCartPanel);
-            closeCartBtn.addEventListener('click', closeCartPanel);
-            
-            cartItemsContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('cart-item-remove')) {
-                    const itemId = e.target.dataset.itemId;
-                    appState.cart = appState.cart.filter(item => item.itemId != itemId);
-                    renderCart();
-                } else if (e.target.classList.contains('cart-quantity-change')) {
-                    const itemId = e.target.dataset.itemId;
-                    const change = parseInt(e.target.dataset.change);
-                    updateCartQuantity(itemId, change);
-                }
-            });
-            
-            checkoutBtn.addEventListener('click', () => renderCheckout(1));
-            
-            mobileMenuBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                mobileMenu.classList.toggle('block');
-            });
+document.querySelectorAll('.filter-checkbox').forEach(cb => {
+cb.addEventListener('change', (e) => {
+const filterType = e.target.dataset.filter;
+const value = e.target.value;
+if (e.target.checked) {
+appState.filters[filterType].push(value);
+} else {
+appState.filters[filterType] = appState.filters[filterType].filter(item => item !== value);
+}
+renderProducts();
+});
+});
 
-            exploreCatalogBtn.addEventListener('click', showCatalog); // Botón de la portada
+document.querySelectorAll('.nav-link').forEach(link => {
+link.addEventListener('click', (e) => {
+e.preventDefault();
+const category = e.target.dataset.category;
+appState.filters.category = category;
+categoryTitle.textContent = category === 'Catalogo' ? 'Todos los Productos' : category;
 
-            renderProducts();
-            renderCart();
-            showHome(); // Mostrar la página de inicio al cargar
-        });
-    </script>
+if (category === 'Catalogo') {
+appState.filters.category = 'Todos'; // Resetear a 'Todos' los productos para el catálogo general
+categoryTitle.textContent = 'Todos los Productos';
+showCatalog();
+} else {
+showCatalog(); // Asegurarse de que el catálogo esté visible al seleccionar una categoría
+}
+updateBodyClass(category); // Actualiza la clase del body para el color
+
+if(mobileMenu.classList.contains('block')) {
+mobileMenu.classList.remove('block');
+mobileMenu.classList.add('hidden');
+}
+});
+});
+
+document.getElementById('logo-btn').addEventListener('click', (e) => {
+e.preventDefault();
+showHome(); // Volver a la página de portada al hacer clic en el logo
+appState.filters.category = 'Todos'; // Resetear categoría de filtro
+categoryTitle.textContent = 'Todos los Productos';
+// Limpiar filtros al volver a la página de inicio
+document.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
+priceSlider.value = 500;
+priceValue.textContent = 'S/ 500';
+appState.filters.talla = [];
+appState.filters.color = [];
+appState.filters.tipo = [];
+appState.filters.maxPrice = 500;
+appState.filters.searchTerm = '';
+searchBar.value = '';
+});
+
+priceSlider.addEventListener('input', (e) => {
+appState.filters.maxPrice = parseInt(e.target.value);
+priceValue.textContent = `S/ ${e.target.value}`;
+renderProducts();
+});
+
+searchBar.addEventListener('keypress', (e) => {
+if (e.key === 'Enter') {
+if (appState.currentView === 'home') {
+showCatalog(); // Mostrar el catálogo si se busca desde la portada
+}
+appState.filters.searchTerm = searchBar.value;
+renderProducts();
+}
+});
+
+clearFiltersBtn.addEventListener('click', () => {
+document.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
+priceSlider.value = 500;
+priceValue.textContent = 'S/ 500';
+appState.filters.talla = [];
+appState.filters.color = [];
+appState.filters.tipo = [];
+appState.filters.maxPrice = 500;
+appState.filters.searchTerm = ''; // Limpiar término de búsqueda
+searchBar.value = ''; // Limpiar barra de búsqueda
+renderProducts();
+});
+
+productGrid.addEventListener('click', (e) => {
+const card = e.target.closest('.group');
+if (card) {
+openProductModal(card.dataset.productId);
+}
+});
+
+cartBtn.addEventListener('click', openCartPanel);
+closeCartBtn.addEventListener('click', closeCartPanel);
+
+cartItemsContainer.addEventListener('click', (e) => {
+if (e.target.classList.contains('cart-item-remove')) {
+const itemId = e.target.dataset.itemId;
+appState.cart = appState.cart.filter(item => item.itemId != itemId);
+renderCart();
+} else if (e.target.classList.contains('cart-quantity-change')) {
+const itemId = e.target.dataset.itemId;
+const change = parseInt(e.target.dataset.change);
+updateCartQuantity(itemId, change);
+}
+});
+
+checkoutBtn.addEventListener('click', () => renderCheckout(1));
+
+mobileMenuBtn.addEventListener('click', () => {
+mobileMenu.classList.toggle('hidden');
+mobileMenu.classList.toggle('block');
+});
+
+exploreCatalogBtn.addEventListener('click', showCatalog); // Botón de la portada
+
+renderProducts();
+renderCart();
+showHome(); // Mostrar la página de inicio al cargar
+});
+</script>
 </body>
 </html>
