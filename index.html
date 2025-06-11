@@ -286,10 +286,8 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // ! IMPORTANTE: Esta URL es para la integración con Google Apps Script para el registro de pedidos.
-            // ! En esta versión de catálogo, la funcionalidad de envío real de pedidos no está activa,
-            // ! pero la URL se mantiene para futuras implementaciones.
-            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbx0Gko5IrOQGLS0VRp1OPxWNZcnxZw_N-7BSW-PGP3U6GR0iCfjjkhxmOK-jwg4_akvwA/exec';
+            // ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT UNA VEZ DESPLEGADA !
+            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyfgyzTU4ZidnGuFgdd_aM0ye85crRcfP9pLWNLIKl8rLZ86OSnOVupjySNNBcv9Bg/exec';
 
             const appState = {
                 products: [],
@@ -306,12 +304,12 @@
                 checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
                 customerInfo: {
                     fullName: '',
-                    lastName: '', // New: last name
+                    lastName: '',
                     dni: '',
-                    phone: '', // New: phone number
+                    phone: '',
                     email: '',
                     address: '',
-                    reference: '', // New: address reference
+                    reference: '',
                     city: '',
                     zipCode: '',
                     pickupName: '',
@@ -320,8 +318,8 @@
                 paymentInfo: {
                     paymentMethod: '',
                     paymentNumber: '',
-                    orderDate: '', // Changed from paymentDate
-                    orderTime: '' // Changed from paymentTime
+                    orderDate: '',
+                    orderTime: ''
                 }
             };
 
@@ -649,7 +647,7 @@
                 renderCart();
             };
             
-            // Modified Checkout for this version with detailed fields
+            // Modified Checkout for this version with detailed fields and Apps Script integration
             const renderCheckout = (step = 1) => {
                 closeCartPanel();
                 let content = '';
@@ -806,15 +804,16 @@
                                     </div>
                                 </div>
                             </div>
-                             <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido Simulado</button>
+                             <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido</button>
                         </div>
                     `;
-                } else if (step === 4) { // Confirmación (Simulada)
+                } else if (step === 4) { // Confirmación
                     content = `
                         <div class="text-center py-20">
                             <p class="text-6xl mb-4">🎉</p>
-                            <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra simulada!</h2>
-                            <p class="text-gray-600 mb-6">Este es un proceso de demostración. No se ha realizado ninguna transacción real.</p>
+                            <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra!</h2>
+                            <p class="text-gray-600 mb-6">Hemos recibido tu pedido. Recibirás un correo de confirmación pronto.</p>
+                            <p class="text-orange-600 font-semibold mb-8">Recuerda que, si tu método de pago lo requiere, debes enviar el número de operación, fecha y hora a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
                             <button id="back-to-shop-btn" class="accent-color text-white px-8 py-3 rounded-lg">Seguir Comprando</button>
                         </div>
                     `;
@@ -876,7 +875,7 @@
                         
                         // Re-enable button if validation fails
                         finishOrderBtn.disabled = false;
-                        finishOrderBtn.textContent = 'Finalizar Pedido Simulado';
+                        finishOrderBtn.textContent = 'Finalizar Pedido';
                         finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         return;
                     }
@@ -898,29 +897,56 @@
                     appState.paymentInfo.orderDate = orderDateInput ? orderDateInput.value : '';
                     appState.paymentInfo.orderTime = orderTimeInput ? orderTimeInput.value : '';
 
-                    // Enviar datos del pedido a Google Apps Script (SIMULADO en esta versión)
-                    // console.log('Pedido simulado:', {
-                    //     timestamp: new Date().toLocaleString(),
-                    //     orderId: `ORD-${Date.now()}`,
-                    //     customer: appState.customerInfo,
-                    //     deliveryMethod: appState.checkoutShippingMethod,
-                    //     items: appState.cart.map(item => {
-                    //         const product = appState.products.find(p => p.id === item.id);
-                    //         return {
-                    //                 name: product.name,
-                    //                 quantity: item.quantity,
-                    //                 price: product.price,
-                    //                 size: item.size,
-                    //                 color: item.color
-                    //         };
-                    //     }),
-                    //     subtotal: subtotal.toFixed(2),
-                    //     shippingCost: shippingCost.toFixed(2),
-                    //     total: total.toFixed(2),
-                    //     payment: appState.paymentInfo
-                    // });
-                    console.log('Pedido simulado enviado. No hay integración real con Google Apps Script en esta versión.');
-                    // Puedes añadir un indicador de éxito visual aquí si lo deseas.
+                    // Enviar datos del pedido a Google Apps Script
+                    const orderData = {
+                        timestamp: new Date().toLocaleString(),
+                        orderId: `ORD-${Date.now()}`, // ID único para el pedido
+                        customer: appState.customerInfo,
+                        deliveryMethod: appState.checkoutShippingMethod,
+                        items: appState.cart.map(item => {
+                            const product = appState.products.find(p => p.id === item.id);
+                            return {
+                                name: product.name,
+                                quantity: item.quantity,
+                                price: product.price,
+                                size: item.size,
+                                color: item.color
+                            };
+                        }),
+                        subtotal: subtotal.toFixed(2),
+                        shippingCost: shippingCost.toFixed(2),
+                        total: total.toFixed(2),
+                        payment: appState.paymentInfo
+                    };
+
+                    try {
+                        const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
+                            method: 'POST',
+                            mode: 'no-cors', // Importante para Apps Script. No-cors para evitar errores de CORS.
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(orderData)
+                        });
+                        // Aunque 'no-cors' no permite leer la respuesta, la solicitud se envía.
+                        console.log('Pedido enviado a Google Apps Script (respuesta no legible por no-cors).');
+                        // Puedes añadir un indicador de éxito visual aquí si lo deseas.
+
+                    } catch (error) {
+                        console.error('Error al enviar el pedido a Google Apps Script:', error);
+                        // Mensaje de error para el usuario si falla el envío
+                        const errorMessage = document.createElement('p');
+                        errorMessage.className = 'text-red-500 text-sm mt-2 text-center';
+                        errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
+                        finishOrderBtn.parentNode.insertBefore(errorMessage, finishOrderBtn);
+                        setTimeout(() => errorMessage.remove(), 5000);
+                        
+                        // Re-enable button on error
+                        finishOrderBtn.disabled = false;
+                        finishOrderBtn.textContent = 'Finalizar Pedido';
+                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        return; // Detener el flujo si hay un error de envío
+                    }
 
                     // Limpiar carrito y mostrar confirmación
                     appState.cart = [];
