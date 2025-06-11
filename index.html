@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <!-- Chosen Palette: Adaptable (Blanco Roto, Gris Carbón, Verde Oliva Sutil, Escalas de Azules, Beige, Colores Suaves para Infantil) -->
-    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo un campo para número de pago, fecha y hora, que serán enviados a una Google Sheet. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. --> 
+    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo un campo para número de pago, fecha y hora, que serán enviados a una Google Sheet. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
     <!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y campos de corroboración -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campos de texto para número de pago, fecha y hora, que serán enviados a una Google Sheet. Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
@@ -460,6 +460,7 @@
                 const product = appState.products.find(p => p.id == productId);
                 if (!product) return;
 
+                // Modificación: se elimina el `required` del campo de color y se ajusta la lógica.
                 productModalContent.innerHTML = `
                     <div class="flex flex-col md:flex-row h-full">
                         <div class="md:w-1/2 h-1/2 md:h-full bg-cover bg-center" style="background-image: url('${product.image}')"></div>
@@ -478,12 +479,14 @@
                                         ${product.sizes.map(size => `<label><input type="radio" name="size" value="${size}" class="sr-only peer"><span class="px-4 py-2 border rounded-lg cursor-pointer peer-checked:bg-gray-800 peer-checked:text-white">${size}</span></label>`).join('')}
                                     </div>
                                 </div>
+                                ${product.colors && product.colors.length > 0 ? `
                                 <div class="mb-6">
                                     <h4 class="font-bold mb-2">Color:</h4>
                                      <div class="flex flex-wrap gap-3">
                                         ${product.colors.map(color => `<label><input type="radio" name="color" value="${color}" class="sr-only peer"><span class="h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-800 block cursor-pointer" style="background-color: ${color.toLowerCase() === 'blanco' ? 'white' : color.toLowerCase()}; border-color: ${color.toLowerCase() === 'blanco' ? '#ccc' : 'transparent'};"></span></label>`).join('')}
                                     </div>
                                 </div>
+                                ` : ''}
                             </div>
                             <div class="mt-auto">
                                 <button data-product-id="${product.id}" class="add-to-cart-btn w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
@@ -504,18 +507,19 @@
 
                 document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
                     const selectedSize = document.querySelector('input[name="size"]:checked');
-                    // Changed: No longer require color selection for adding to cart
-                    const selectedColor = document.querySelector('input[name="color"]:checked'); // Still capture if selected
+                    // Eliminado el 'required' para el color al añadir al carrito
+                    const selectedColor = document.querySelector('input[name="color"]:checked');
 
-                    if (!selectedSize) { // Only check for size
+                    if (!selectedSize) { // Solo se valida la talla
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
-                        messageBox.textContent = 'Por favor, selecciona una talla.'; // Updated message
+                        messageBox.textContent = 'Por favor, selecciona una talla.';
                         e.target.parentNode.insertBefore(messageBox, e.target);
                         setTimeout(() => messageBox.remove(), 3000);
                         return;
                     }
-                    addToCart(product.id, selectedSize.value, selectedColor ? selectedColor.value : 'No especificado'); // Pass 'No especificado' if no color is selected
+                    // Si no se selecciona color, se envía 'No especificado'
+                    addToCart(product.id, selectedSize.value, selectedColor ? selectedColor.value : 'No especificado');
                     productModal.classList.add('opacity-0', 'pointer-events-none');
                     productModalContent.classList.add('scale-95');
                     openCartPanel();
