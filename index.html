@@ -8,15 +8,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <!-- Chosen Palette: Armonía Natural (Blanco Roto, Gris Carbón, Verde Oliva Sutil) -->
-    <!-- Application Structure Plan: Se ha diseñado una Single-Page Application (SPA) para maximizar la fluidez. El usuario nunca abandona la página principal. La navegación por categorías y los filtros actualizan la vista de productos dinámicamente. Al hacer clic en un producto, un modal superpuesto muestra los detalles, manteniendo el contexto. El carrito es un panel lateral deslizable para un acceso rápido y el checkout es una secuencia de modales que guían al usuario paso a paso. Esta arquitectura SPA fue elegida por su velocidad, experiencia de usuario moderna y capacidad para mantener al usuario enganchado sin las interrupciones de las recargas de página tradicionales. -->
-    <!-- Visualization & Content Choices: Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar -> Viz/Presentation Method: Cuadrícula de tarjetas de productos en HTML/Tailwind para una fácil comparación visual. Barra lateral con controles de formulario (checkboxes, slider) para el filtrado -> Interaction: JS actualiza la cuadrícula en tiempo real según la selección del usuario. Report Info: Detalles del producto -> Goal: Informar en profundidad -> Viz/Presentation: Modal superpuesto que enfoca la atención -> Interaction: Selección de talla/color y botón "Agregar al Carrito" que actualiza el estado de la app. Report Info: Carrito y Checkout -> Goal: Gestionar compra -> Viz/Presentation: Panel lateral y modales secuenciales -> Interaction: JS gestiona el estado del carrito, los cálculos de totales y la progresión a través de los pasos de pago. Library/Method: Vanilla JS para toda la lógica, TailwindCSS para el layout. -->
+    <!-- Chosen Palette: Adaptable (Blanco Roto, Gris Carbón, Verde Oliva Sutil, Escalas de Azules, Beige, Colores Suaves para Infantil) -->
+    <!-- Application Structure Plan: La SPA ahora inicia con una página de portada inmersiva. El acceso al catálogo de productos (con filtros) se activa explícitamente a través del enlace 'Catálogo' o al presionar Enter en la barra de búsqueda. Se han implementado paletas de colores dinámicas para las categorías Hombre, Mujer e Infantil, transformando la interfaz visual. El carrito y el checkout mantienen su flujo modal y lateral, con el checkout ahora ofreciendo opciones de recogida y detalles mejorados para pagos locales, incluyendo una indicación para adjuntar comprobantes. La sección 'Nosotros' se integra en el pie de página. Esta estructura prioriza un primer impacto visual y un control explícito sobre la navegación principal. -->
+    <!-- Visualization & Content Choices: Report Info: Página de portada -> Goal: Primer impacto y bienvenida -> Viz/Presentation Method: Sección de héroe con espacio para imágenes/videos de fondo y texto principal. Report Info: Listado de productos y filtros -> Goal: Organizar y Comparar (activado bajo demanda) -> Viz/Presentation Method: Mismo diseño de cuadrícula pero con activación controlada. Report Info: Paletas de colores por categoría -> Goal: Segmentación visual y branding -> Viz/Presentation Method: Clases CSS dinámicas aplicadas al cuerpo del documento. Report Info: Métodos de pago locales y comprobantes -> Goal: Facilita la compra y genera confianza -> Viz/Presentation Method: Instrucciones claras en el modal de checkout, con campo de subida de archivo (solo para UI, la funcionalidad de envío real requeriría backend). Report Info: Recogida/Envío -> Goal: Flexibilidad al cliente -> Viz/Presentation Method: Botones de radio en el paso de envío del checkout. Library/Method: Vanilla JS para toda la lógica dinámica y las transiciones de vista, TailwindCSS para el layout y los estilos adaptables. -->
     <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
     <style>
         body {
             font-family: 'Lato', sans-serif;
             background-color: #F8F7F5; /* Blanco Roto */
             color: #333333; /* Gris Carbón */
+            transition: background-color 0.5s ease; /* Transición para cambios de color de fondo */
         }
         .accent-color {
             background-color: #8A9A5B; /* Verde Oliva */
@@ -56,9 +57,31 @@
         .cart-panel {
             transition: transform 0.3s ease-in-out;
         }
+
+        /* Colores específicos por categoría */
+        .category-hombre {
+            background-color: #F0F8FF; /* Azul muy claro */
+            color: #1A1A1A;
+        }
+        .category-mujer {
+            background-color: #F5EFE6; /* Beige claro */
+            color: #333333;
+        }
+        .category-infantil {
+            background-color: #FFFACD; /* Amarillo pastel */
+            color: #333333;
+        }
+        .category-ofertas, .category-novedades {
+            background-color: #FEF3F2; /* Rojo pastel */
+            color: #333333;
+        }
+        .category-todos, .category-home {
+            background-color: #F8F7F5; /* Blanco Roto */
+            color: #333333;
+        }
     </style>
 </head>
-<body class="antialiased">
+<body class="antialiased category-home">
 
     <!-- MODAL DE DETALLE DE PRODUCTO -->
     <div id="product-modal" class="modal fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 opacity-0 pointer-events-none">
@@ -105,11 +128,12 @@
             <div class="flex justify-between items-center">
                 <a href="#" id="logo-btn" class="text-3xl font-bold accent-color-text">Esvi Atelier</a>
                 <nav class="hidden md:flex space-x-8">
+                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Catalogo">Catálogo</a>
                     <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Hombre">Hombre</a>
                     <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Mujer">Mujer</a>
                     <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Infantil">Infantil</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas<span class="ml-1 text-red-500">!</span></a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades<span class="ml-1 text-blue-500">!</span></a>
                 </nav>
                 <div class="flex items-center space-x-6">
                     <div class="relative hidden md:block">
@@ -127,16 +151,30 @@
             <!-- Menú Móvil -->
             <div id="mobile-menu" class="hidden md:hidden mt-4">
                  <nav class="flex flex-col space-y-4">
+                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Catalogo">Catálogo</a>
                     <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Hombre">Hombre</a>
                     <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Mujer">Mujer</a>
                     <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Infantil">Infantil</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas</a>
-                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades</a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Ofertas">Ofertas<span class="ml-1 text-red-500">!</span></a>
+                    <a href="#" class="nav-link text-gray-600 hover:text-black" data-category="Novedades">Novedades<span class="ml-1 text-blue-500">!</span></a>
                 </nav>
             </div>
         </header>
 
-        <main class="py-8">
+        <!-- PÁGINA DE PORTADA (HOME) -->
+        <section id="landing-page" class="relative flex items-center justify-center h-[calc(100vh-80px)] bg-neutral-100 text-center py-20 px-4">
+            <div class="absolute inset-0 bg-cover bg-center opacity-60" style="background-image: url('https://placehold.co/1920x1080/D3D3D3/000?text=Bienvenida+a+Esvi+Atelier');"></div>
+            <div class="relative z-10 p-8 bg-white/70 backdrop-blur-sm rounded-lg shadow-xl max-w-2xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4 accent-color-text">Bienvenida a Esvi Atelier</h1>
+                <p class="text-lg md:text-xl text-gray-800 mb-8">Descubre la moda que te define. Estilo, calidad y diseño en cada prenda.</p>
+                <button id="explore-catalog-btn" class="text-white p-4 text-xl rounded-full accent-color hover:opacity-90 transition-opacity transform hover:scale-105">
+                    Explorar Catálogo
+                </button>
+            </div>
+        </section>
+
+        <!-- MAIN CONTENT (CATALOG PAGE) - Hidden by default -->
+        <main id="main-content" class="py-8 hidden">
             <div class="flex flex-col md:flex-row gap-8">
                 <!-- FILTROS -->
                 <aside class="w-full md:w-1/4 lg:w-1/5">
@@ -162,6 +200,7 @@
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Azul"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-blue-600 cursor-pointer"></span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Rojo"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-red-600 cursor-pointer"></span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Verde"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-green-600 cursor-pointer"></span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox hidden" data-filter="color" value="Beige"><span class="h-6 w-6 rounded-full border border-gray-300 block bg-amber-200 cursor-pointer"></span></label>
                             </div>
                         </div>
                         <!-- Precio -->
@@ -178,6 +217,9 @@
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Pantalón"><span> Pantalones</span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Vestido"><span> Vestidos</span></label>
                                 <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Chompa"><span> Chompas</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Polo"><span> Polos</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Conjunto"><span> Conjuntos</span></label>
+                                <label class="flex items-center"><input type="checkbox" class="filter-checkbox accent-color" data-filter="tipo" value="Falda"><span> Faldas</span></label>
                             </div>
                         </div>
                         <button id="clear-filters-btn" class="w-full border border-gray-300 text-gray-700 py-2 rounded-lg hover:bg-gray-100 transition-colors">Limpiar Filtros</button>
@@ -225,6 +267,13 @@
                     </div>
                 </div>
             </div>
+            <!-- Sección Nosotros -->
+            <div class="mt-10 pt-10 border-t border-gray-200">
+                <h3 class="font-bold text-lg mb-4 text-black">Sobre Esvi Atelier</h3>
+                <p class="max-w-xl mx-auto text-gray-600">
+                    En Esvi Atelier, creemos que la moda es una expresión personal. Diseñamos prendas únicas y atemporales que combinan estilo, calidad y confort, para que te sientas increíble en cada momento. Nuestra misión es ofrecerte ropa que no solo sigua tendencias, sino que te permita crear tu propio estilo auténtico.
+                </p>
+            </div>
             <p class="mt-10 text-sm">&copy; 2025 Esvi Atelier. Todos los derechos reservados.</p>
         </footer>
 
@@ -244,18 +293,20 @@
                     maxPrice: 500,
                     searchTerm: ''
                 },
-                currentView: 'products'
+                currentView: 'home', // 'home' or 'catalog'
+                checkoutShippingMethod: 'delivery' // 'delivery' or 'pickup'
             };
 
             const mockProducts = [
-                { id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
-                { id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Verde'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
-                { id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XS', 'S', 'M'], colors: ['Rojo', 'Azul'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
-                { id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['M', 'L'], colors: ['Blanco', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
-                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Rojo'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
-                { id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['S', 'M'], colors: ['Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
-                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
-                { id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['S', 'M', 'L'], colors: ['Negro', 'Rojo'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'}
+                { id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino+Hombre', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
+                { id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino+Hombre', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
+                { id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XS', 'S', 'M'], colors: ['Beige', 'Blanco'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral+Mujer', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
+                { id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['M', 'L'], colors: ['Beige', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca+Mujer', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
+                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
+                { id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['S', 'M'], colors: ['Beige', 'Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny+Mujer', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
+                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
+                { id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['S', 'M', 'L'], colors: ['Negro', 'Beige'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi+Mujer', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'},
+                { id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['XS', 'S', 'M'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'}
             ];
             
             appState.products = mockProducts;
@@ -267,6 +318,10 @@
             const priceValue = document.getElementById('price-value');
             const clearFiltersBtn = document.getElementById('clear-filters-btn');
             const searchBar = document.getElementById('search-bar');
+            const landingPage = document.getElementById('landing-page');
+            const mainContent = document.getElementById('main-content');
+            const exploreCatalogBtn = document.getElementById('explore-catalog-btn');
+            const bodyElement = document.body;
             
             const productModal = document.getElementById('product-modal');
             const productModalContent = document.getElementById('product-modal-content');
@@ -285,11 +340,48 @@
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
 
+            const updateBodyClass = (category) => {
+                bodyElement.className = ''; // Limpia todas las clases de categoría existentes
+                let className = 'antialiased ';
+                if (category === 'Hombre') {
+                    className += 'category-hombre';
+                } else if (category === 'Mujer') {
+                    className += 'category-mujer';
+                } else if (category === 'Infantil') {
+                    className += 'category-infantil';
+                } else if (category === 'Ofertas' || category === 'Novedades') {
+                    className += 'category-ofertas'; // Usamos la misma clase para ambos por ahora
+                } else if (category === 'Todos' || category === 'Catalogo') {
+                    className += 'category-todos';
+                } else { // Home page
+                    className += 'category-home';
+                }
+                bodyElement.className = className;
+            };
+
+            const showCatalog = () => {
+                landingPage.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+                appState.currentView = 'catalog';
+                updateBodyClass(appState.filters.category); // Aplicar clase de categoría inicial al mostrar catálogo
+                renderProducts(); // Renderizar productos al mostrar el catálogo
+            };
+
+            const showHome = () => {
+                landingPage.classList.remove('hidden');
+                mainContent.classList.add('hidden');
+                appState.currentView = 'home';
+                updateBodyClass('home'); // Asegurar clase de home
+                // Resetear filtros si es necesario, o mantener para próxima visita al catálogo
+            };
+
+
             const renderProducts = () => {
                 productGrid.innerHTML = '';
                 let filteredProducts = [...appState.products];
 
-                if (appState.filters.category !== 'Todos') {
+                // Filtro por categoría principal (Hombre, Mujer, Infantil, Ofertas, Novedades)
+                if (appState.filters.category !== 'Todos' && appState.filters.category !== 'Catalogo') {
                     if (appState.filters.category === 'Ofertas') {
                         filteredProducts = filteredProducts.filter(p => p.onSale);
                     } else if (appState.filters.category === 'Novedades') {
@@ -393,7 +485,12 @@
                     const selectedSize = document.querySelector('input[name="size"]:checked');
                     const selectedColor = document.querySelector('input[name="color"]:checked');
                     if (!selectedSize || !selectedColor) {
-                        alert('Por favor, selecciona talla y color.');
+                        // Replaced alert with a simple message within the modal for better UX
+                        const messageBox = document.createElement('p');
+                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+                        messageBox.textContent = 'Por favor, selecciona talla y color.';
+                        e.target.parentNode.insertBefore(messageBox, e.target);
+                        setTimeout(() => messageBox.remove(), 3000);
                         return;
                     }
                     addToCart(product.id, selectedSize.value, selectedColor.value);
@@ -447,7 +544,7 @@
                     appState.cart[existingItemIndex].quantity++;
                 } else {
                     appState.cart.push({
-                        itemId: Date.now(),
+                        itemId: Date.now(), // Unique ID for each cart item instance
                         id: productId,
                         quantity: 1,
                         size,
@@ -475,8 +572,8 @@
                     const product = appState.products.find(p => p.id === item.id);
                     return sum + (product.price * item.quantity);
                 }, 0);
-                const shipping = 10;
-                const total = subtotal + shipping;
+                const shippingCost = appState.checkoutShippingMethod === 'delivery' ? 10 : 0; // S/10 for delivery, S/0 for pickup
+                const total = subtotal + shippingCost;
 
                 if (step === 1) { // Información de Envío
                     content = `
@@ -486,6 +583,21 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <form id="shipping-form">
+                                    <div class="mb-6">
+                                        <h3 class="font-bold mb-2">Método de Entrega:</h3>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center space-x-2">
+                                                <input type="radio" name="deliveryMethod" value="delivery" class="accent-color" ${appState.checkoutShippingMethod === 'delivery' ? 'checked' : ''}>
+                                                <span>Envío a domicilio (S/ 10.00)</span>
+                                            </label>
+                                            <label class="flex items-center space-x-2">
+                                                <input type="radio" name="deliveryMethod" value="pickup" class="accent-color" ${appState.checkoutShippingMethod === 'pickup' ? 'checked' : ''}>
+                                                <span>Recoger en tienda (Gratis)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    ${appState.checkoutShippingMethod === 'delivery' ? `
                                     <div class="space-y-4">
                                         <input type="text" placeholder="Nombre completo" required class="w-full p-3 border rounded-lg">
                                         <input type="email" placeholder="Correo electrónico" required class="w-full p-3 border rounded-lg">
@@ -496,6 +608,15 @@
                                         </div>
                                         <input type="tel" placeholder="Teléfono" required class="w-full p-3 border rounded-lg">
                                     </div>
+                                    ` : `
+                                    <div class="space-y-4">
+                                        <p class="text-gray-700">Puedes recoger tu pedido en nuestra tienda física:</p>
+                                        <p class="font-semibold">Esvi Atelier - Av. Principal 123, Miraflores, Lima.</p>
+                                        <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
+                                        <input type="text" placeholder="Nombre completo para recoger" required class="w-full p-3 border rounded-lg">
+                                        <input type="email" placeholder="Correo electrónico de contacto" required class="w-full p-3 border rounded-lg">
+                                    </div>
+                                    `}
                                     <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
                                 </form>
                             </div>
@@ -510,7 +631,7 @@
                                 </div>
                                 <div class="space-y-1">
                                     <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
-                                    <div class="flex justify-between"><span class="text-gray-600">Envío</span><span>S/ ${shipping.toFixed(2)}</span></div>
+                                    <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
                                     <div class="flex justify-between font-bold text-lg mt-2"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
                                 </div>
                             </div>
@@ -524,15 +645,20 @@
                          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <div class="bg-gray-50 p-6 rounded-lg mb-6">
-                                    <h3 class="font-bold mb-2">Dirección de Envío</h3>
-                                    <p class="text-gray-600">John Doe<br>Av. Siempre Viva 123<br>Lima, 15023<br>Perú</p>
+                                    <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
+                                    ${appState.checkoutShippingMethod === 'delivery' ? `
+                                        <p class="text-gray-600">John Doe<br>Av. Siempre Viva 123<br>Lima, 15023<br>Perú</p>
+                                    ` : `
+                                        <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
+                                        <p class="text-gray-600">A nombre de: John Doe</p>
+                                    `}
                                     <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
                                 </div>
                                 <h3 class="font-bold text-xl mb-4">Items del Pedido</h3>
                                  <div class="space-y-4">
                                     ${appState.cart.map(item => {
                                         const product = appState.products.find(p => p.id === item.id);
-                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">${item.size}, ${item.color}</p></div><p>S/ ${product.price.toFixed(2)}</p></div>`;
+                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">${item.size}, ${item.color}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
                                     }).join('')}
                                 </div>
                             </div>
@@ -540,7 +666,7 @@
                                 <h3 class="font-bold text-xl mb-4">Resumen Final</h3>
                                  <div class="space-y-1 mb-6 border-b pb-4">
                                     <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
-                                    <div class="flex justify-between"><span class="text-gray-600">Envío</span><span>S/ ${shipping.toFixed(2)}</span></div>
+                                    <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
                                 </div>
                                 <div class="flex justify-between font-bold text-lg mb-6"><span >Total a Pagar</span><span>S/ ${total.toFixed(2)}</span></div>
                                 <button id="to-payment-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Pago</button>
@@ -548,6 +674,14 @@
                         </div>
                     `;
                 } else if (step === 3) { // Pago
+                    const productDescriptions = appState.cart.map(item => {
+                        const product = appState.products.find(p => p.id === item.id);
+                        return `${item.quantity} x ${product.name} (Talla: ${item.size}, Color: ${item.color}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
+                    }).join(', ');
+
+                    const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
+                    const emailBody = encodeURIComponent(`Hola,\n\nAdjunto el comprobante de pago de mi pedido en Esvi Atelier.\n\nProductos:\n${productDescriptions}\n\nTotal pagado: S/ ${total.toFixed(2)}\n\nGracias.`);
+
                     content = `
                         <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
                         <h2 class="text-3xl font-bold mb-2">Checkout</h2>
@@ -556,15 +690,31 @@
                             <p class="text-center text-lg mb-4">Total a pagar: <span class="font-bold">S/ ${total.toFixed(2)}</span></p>
                             <div class="space-y-4">
                                 <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" class="mr-2 accent-color"><span>Tarjeta de Crédito/Débito</span></label>
+                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="yapeplin" class="mr-2 accent-color" checked><span>Yape / Plin</span></label>
+                                    <p class="text-sm text-gray-600 mt-2 ml-6">
+                                        Realiza tu pago a nuestro número de celular: <span class="font-semibold">987 654 321</span>.<br>
+                                        <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                    </p>
+                                    <div class="mt-4 ml-6">
+                                        <label for="payment-screenshot" class="block text-sm font-medium text-gray-700">Adjuntar captura de pantalla (opcional)</label>
+                                        <input type="file" id="payment-screenshot" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+                                        <p class="text-xs text-gray-500 mt-1">Este campo es solo para referencia visual. Deberás enviar la captura manualmente por correo.</p>
+                                    </div>
                                 </div>
                                 <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" class="mr-2 accent-color"><span>Yape / Plin</span></label>
-                                    <p class="text-sm text-gray-600 mt-2 ml-6">Paga a través de Yape o Plin al número 987 654 321. Envía tu comprobante a ventas@esvi.com</p>
-                                </div>
-                                <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" class="mr-2 accent-color"><span>Transferencia Bancaria</span></label>
-                                     <p class="text-sm text-gray-600 mt-2 ml-6">BCP: 123-456789-0-12<br>BBVA: 001-123-000456789<br>Interbank: 890-1234567890</p>
+                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="transferencia" class="mr-2 accent-color"><span>Transferencia Bancaria</span></label>
+                                     <p class="text-sm text-gray-600 mt-2 ml-6">
+                                        Realiza la transferencia a una de nuestras cuentas:<br>
+                                        <span class="font-semibold">BCP: 123-456789-0-12</span><br>
+                                        <span class="font-semibold">BBVA: 001-123-000456789</span><br>
+                                        <span class="font-semibold">Interbank: 890-1234567890</span><br>
+                                        <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                    </p>
+                                    <div class="mt-4 ml-6">
+                                        <label for="payment-screenshot-transfer" class="block text-sm font-medium text-gray-700">Adjuntar captura de pantalla (opcional)</label>
+                                        <input type="file" id="payment-screenshot-transfer" accept="image/*" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100">
+                                        <p class="text-xs text-gray-500 mt-1">Este campo es solo para referencia visual. Deberás enviar la captura manualmente por correo.</p>
+                                    </div>
                                 </div>
                             </div>
                              <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido</button>
@@ -576,6 +726,7 @@
                             <p class="text-6xl mb-4">🎉</p>
                             <h2 class="text-4xl font-bold mb-2">¡Gracias por tu compra!</h2>
                             <p class="text-gray-600 mb-6">Hemos recibido tu pedido. Recibirás un correo de confirmación pronto.</p>
+                            <p class="text-orange-600 font-semibold mb-8">Recuerda enviar la captura de pantalla de tu pago a <a href="mailto:viniesilva29@gmail.com" class="underline">viniesilva29@gmail.com</a></p>
                             <button id="back-to-shop-btn" class="accent-color text-white px-8 py-3 rounded-lg">Seguir Comprando</button>
                         </div>
                      `;
@@ -591,6 +742,13 @@
                     e.preventDefault();
                     renderCheckout(2);
                 });
+
+                document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        appState.checkoutShippingMethod = e.target.value;
+                        renderCheckout(1); // Volver a renderizar para actualizar campos de envío
+                    });
+                });
                 
                 document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
@@ -600,13 +758,16 @@
                     renderCheckout(4);
                 });
                 
-                document.getElementById('back-to-shop-btn')?.addEventListener('click', closeCheckoutModal);
+                document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
+                    closeCheckoutModal();
+                    showHome(); // Volver a la página de portada
+                });
             };
 
             const openCartPanel = () => cartPanel.classList.remove('translate-x-full');
             const closeCartPanel = () => cartPanel.classList.add('translate-x-full');
             const closeCheckoutModal = () => checkoutModal.classList.add('opacity-0', 'pointer-events-none');
-            window.renderCheckout = renderCheckout;
+            window.renderCheckout = renderCheckout; // Exponer para el botón "Editar" en el checkout
 
             document.querySelectorAll('.filter-checkbox').forEach(cb => {
                 cb.addEventListener('change', (e) => {
@@ -624,9 +785,19 @@
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', (e) => {
                     e.preventDefault();
-                    appState.filters.category = e.target.dataset.category;
-                    categoryTitle.textContent = e.target.dataset.category === 'Todos' ? 'Todos los Productos' : e.target.dataset.category;
-                    renderProducts();
+                    const category = e.target.dataset.category;
+                    appState.filters.category = category;
+                    categoryTitle.textContent = category === 'Catalogo' ? 'Todos los Productos' : category;
+                    
+                    if (category === 'Catalogo') {
+                        appState.filters.category = 'Todos'; // Resetear a 'Todos' los productos para el catálogo general
+                        categoryTitle.textContent = 'Todos los Productos';
+                        showCatalog();
+                    } else {
+                        showCatalog(); // Asegurarse de que el catálogo esté visible al seleccionar una categoría
+                    }
+                    updateBodyClass(category); // Actualiza la clase del body para el color
+
                     if(mobileMenu.classList.contains('block')) {
                         mobileMenu.classList.remove('block');
                         mobileMenu.classList.add('hidden');
@@ -636,9 +807,19 @@
             
             document.getElementById('logo-btn').addEventListener('click', (e) => {
                  e.preventDefault();
-                 appState.filters.category = 'Todos';
+                 showHome(); // Volver a la página de portada al hacer clic en el logo
+                 appState.filters.category = 'Todos'; // Resetear categoría de filtro
                  categoryTitle.textContent = 'Todos los Productos';
-                 renderProducts();
+                 // Limpiar filtros al volver a la página de inicio
+                 document.querySelectorAll('.filter-checkbox').forEach(cb => cb.checked = false);
+                 priceSlider.value = 500;
+                 priceValue.textContent = 'S/ 500';
+                 appState.filters.talla = [];
+                 appState.filters.color = [];
+                 appState.filters.tipo = [];
+                 appState.filters.maxPrice = 500;
+                 appState.filters.searchTerm = '';
+                 searchBar.value = '';
             });
 
             priceSlider.addEventListener('input', (e) => {
@@ -647,9 +828,14 @@
                 renderProducts();
             });
             
-            searchBar.addEventListener('input', (e) => {
-                appState.filters.searchTerm = e.target.value;
-                renderProducts();
+            searchBar.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (appState.currentView === 'home') {
+                        showCatalog(); // Mostrar el catálogo si se busca desde la portada
+                    }
+                    appState.filters.searchTerm = searchBar.value;
+                    renderProducts();
+                }
             });
 
             clearFiltersBtn.addEventListener('click', () => {
@@ -660,6 +846,8 @@
                 appState.filters.color = [];
                 appState.filters.tipo = [];
                 appState.filters.maxPrice = 500;
+                appState.filters.searchTerm = ''; // Limpiar término de búsqueda
+                searchBar.value = ''; // Limpiar barra de búsqueda
                 renderProducts();
             });
             
@@ -692,8 +880,11 @@
                 mobileMenu.classList.toggle('block');
             });
 
+            exploreCatalogBtn.addEventListener('click', showCatalog); // Botón de la portada
+
             renderProducts();
             renderCart();
+            showHome(); // Mostrar la página de inicio al cargar
         });
     </script>
 </body>
