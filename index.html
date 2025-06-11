@@ -306,20 +306,22 @@
                 checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
                 customerInfo: {
                     fullName: '',
+                    lastName: '', // New: last name
+                    dni: '',
+                    phone: '', // New: phone number
                     email: '',
                     address: '',
+                    reference: '', // New: address reference
                     city: '',
                     zipCode: '',
-                    phone: '',
-                    dni: '',
                     pickupName: '',
                     pickupEmail: ''
                 },
                 paymentInfo: {
                     paymentMethod: '',
                     paymentNumber: '',
-                    paymentDate: '',
-                    paymentTime: ''
+                    orderDate: '', // Changed from paymentDate
+                    orderTime: '' // Changed from paymentTime
                 }
             };
 
@@ -647,7 +649,7 @@
                 renderCart();
             };
             
-            // Simplified Checkout for this "homepage-only" version
+            // Modified Checkout for this version with detailed fields
             const renderCheckout = (step = 1) => {
                 closeCartPanel();
                 let content = '';
@@ -658,47 +660,153 @@
                 const shippingCost = appState.checkoutShippingMethod === 'delivery' ? 10 : 0;
                 const total = subtotal + shippingCost;
 
-                if (step === 1) { // Información de Envío (Simulada)
+                if (step === 1) { // Información de Envío
                     content = `
                         <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
                         <h2 class="text-3xl font-bold mb-2">Checkout</h2>
-                        <div class="text-sm text-gray-500 mb-6">Paso 1 de 3: Información de Envío (Simulado)</div>
-                        <div class="max-w-lg mx-auto p-6 bg-gray-50 rounded-lg">
-                            <p class="text-lg font-semibold mb-4">Esta es una versión de demostración. Los campos de datos no se guardan.</p>
+                        <div class="text-sm text-gray-500 mb-6">Paso 1 de 3: Información de Envío</div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <form id="shipping-form">
+                                    <div class="mb-6">
+                                        <h3 class="font-bold mb-2">Método de Entrega:</h3>
+                                        <div class="flex gap-4">
+                                            <label class="flex items-center space-x-2">
+                                                <input type="radio" name="deliveryMethod" value="delivery" class="accent-color" ${appState.checkoutShippingMethod === 'delivery' ? 'checked' : ''}>
+                                                <span>Envío a domicilio (S/ 10.00)</span>
+                                            </label>
+                                            <label class="flex items-center space-x-2">
+                                                <input type="radio" name="deliveryMethod" value="pickup" class="accent-color" ${appState.checkoutShippingMethod === 'pickup' ? 'checked' : ''}>
+                                                <span>Recoger en tienda (Gratis)</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    ${appState.checkoutShippingMethod === 'delivery' ? `
+                                    <div class="space-y-4">
+                                        <input type="text" id="shipping-fullName" placeholder="Nombre" value="${appState.customerInfo.fullName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-lastName" placeholder="Apellidos" value="${appState.customerInfo.lastName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="email" id="shipping-email" placeholder="Correo electrónico" value="${appState.customerInfo.email}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="tel" id="shipping-phone" placeholder="Celular (ej: 9XXXXXXXX)" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required pattern="[0-9]{9}">
+                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-address" placeholder="Dirección (Calle, Número)" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-reference" placeholder="Referencia (ej: A lado de la farmacia)" value="${appState.customerInfo.reference}" class="w-full p-3 border rounded-lg">
+                                        <div class="flex gap-4">
+                                            <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
+                                            <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
+                                        </div>
+                                    </div>
+                                    ` : `
+                                    <div class="space-y-4">
+                                        <p class="text-gray-700">Puedes recoger tu pedido en nuestra tienda física:</p>
+                                        <p class="font-semibold">Esvi Atelier - Av. Principal 123, Miraflores, Lima.</p>
+                                        <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
+                                        <input type="text" id="pickup-name" placeholder="Nombre completo para recoger" value="${appState.customerInfo.pickupName}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="email" id="pickup-email" placeholder="Correo electrónico de contacto" value="${appState.customerInfo.pickupEmail}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
+                                    </div>
+                                    `}
+                                    <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
+                                </form>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-lg">
+                                <h3 class="font-bold text-xl mb-4">Resumen de tu Orden</h3>
+                                <!-- Resumen de productos -->
+                                <div class="space-y-2 mb-4 border-b pb-4">
+                                    ${appState.cart.map(item => {
+                                        const product = appState.products.find(p => p.id === item.id);
+                                        return `<div class="flex justify-between text-sm"><span class="truncate pr-4">${item.quantity} x ${product.name}</span><span>S/ ${(product.price * item.quantity).toFixed(2)}</span></div>`;
+                                    }).join('')}
+                                </div>
+                                <div class="space-y-1">
+                                    <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
+                                    <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
+                                    <div class="flex justify-between font-bold text-lg mt-2"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else if (step === 2) { // Revisión de pedido
+                    content = `
+                         <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
+                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
+                        <div class="text-sm text-gray-500 mb-6">Paso 2 de 3: Revisión de Pedido</div>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <div class="bg-gray-50 p-6 rounded-lg mb-6">
+                                    <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
+                                    ${appState.checkoutShippingMethod === 'delivery' ? `
+                                        <p class="text-gray-600">${appState.customerInfo.fullName} ${appState.customerInfo.lastName}<br>DNI: ${appState.customerInfo.dni}<br>Celular: ${appState.customerInfo.phone}<br>${appState.customerInfo.email}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Referencia: ${appState.customerInfo.reference}</p>
+                                    ` : `
+                                        <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
+                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}<br>DNI: ${appState.customerInfo.dni}<br>Correo: ${appState.customerInfo.pickupEmail}</p>
+                                    `}
+                                    <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
+                                </div>
+                                <h3 class="font-bold text-xl mb-4">Items del Pedido</h3>
+                                 <div class="space-y-4">
+                                    ${appState.cart.map(item => {
+                                        const product = appState.products.find(p => p.id === item.id);
+                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No aplicable' ? `, Color: ${item.color}` : ''}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
+                                    }).join('')}
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-lg">
+                                <h3 class="font-bold text-xl mb-4">Resumen Final</h3>
+                                 <div class="space-y-1 mb-6 border-b pb-4">
+                                    <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
+                                    <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
+                                </div>
+                                <div class="flex justify-between font-bold text-lg mb-6"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
+                                <button id="to-payment-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Pago</button>
+                            </div>
+                        </div>
+                    `;
+                } else if (step === 3) { // Pago
+                    const productDescriptions = appState.cart.map(item => {
+                        const product = appState.products.find(p => p.id === item.id);
+                        return `${item.quantity} x ${product.name} (Talla: ${item.size}${item.color !== 'No aplicable' ? `, Color: ${item.color}` : ''}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
+                    }).join(', ');
+
+                    const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
+                    const emailBody = encodeURIComponent(`Hola,\n\nAdjunto el comprobante de pago de mi pedido en Esvi Atelier.\n\nProductos:\n${productDescriptions}\n\nTotal pagado: S/ ${total.toFixed(2)}\n\nGracias.`);
+
+                    content = `
+                        <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
+                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
+                        <div class="text-sm text-gray-500 mb-6">Paso 3 de 3: Método de Pago</div>
+                        <div class="max-w-md mx-auto">
+                            <p class="text-center text-lg mb-4">Total a pagar: <span class="font-bold">S/ ${total.toFixed(2)}</span></p>
                             <div class="space-y-4">
-                                <input type="text" id="shipping-fullName" placeholder="Nombre completo" class="w-full p-3 border rounded-lg" value="Juan Perez">
-                                <input type="email" id="shipping-email" placeholder="Correo electrónico" class="w-full p-3 border rounded-lg" value="juan.perez@example.com">
-                                <input type="text" id="customer-dni" placeholder="DNI" class="w-full p-3 border rounded-lg" value="12345678A">
+                                <div class="border p-4 rounded-lg">
+                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="yapeplin" class="mr-2 accent-color" checked><span>Yape / Plin</span></label>
+                                    <p class="text-sm text-gray-600 mt-2 ml-6">
+                                        Realiza tu pago a nuestro número de celular: <span class="font-semibold">987 654 321</span>.<br>
+                                        <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                    </p>
+                                    <div class="mt-4 ml-6 space-y-2">
+                                        <input type="text" id="payment-number-yapeplin" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="order-date-yapeplin" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="order-time-yapeplin" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
+                                    </div>
+                                </div>
+                                <div class="border p-4 rounded-lg">
+                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="transferencia" class="mr-2 accent-color"><span>Transferencia Bancaria</span></label>
+                                     <p class="text-sm text-gray-600 mt-2 ml-6">
+                                        Realiza la transferencia a una de nuestras cuentas:<br>
+                                        <span class="font-semibold">BCP: 123-456789-0-12</span><br>
+                                        <span class="font-semibold">BBVA: 001-123-000456789</span><br>
+                                        <span class="font-semibold">Interbank: 890-1234567890</span><br>
+                                        <span class="text-red-500 font-semibold">¡IMPORTANTEl!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                    </p>
+                                    <div class="mt-4 ml-6 space-y-2">
+                                        <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="order-date-transferencia" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="order-time-transferencia" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
+                                    </div>
+                                </div>
                             </div>
-                            <button id="next-step-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Paso 2</button>
-                        </div>
-                    `;
-                } else if (step === 2) { // Revisión de pedido (Simulada)
-                    content = `
-                        <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
-                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
-                        <div class="text-sm text-gray-500 mb-6">Paso 2 de 3: Revisión de Pedido (Simulado)</div>
-                        <div class="max-w-lg mx-auto p-6 bg-gray-50 rounded-lg">
-                            <p class="text-lg font-semibold mb-4">Resumen de tu pedido:</p>
-                            <div class="space-y-2 mb-4 border-b pb-4">
-                                ${appState.cart.map(item => {
-                                    const product = appState.products.find(p => p.id === item.id);
-                                    return `<div class="flex justify-between text-sm"><span class="truncate pr-4">${item.quantity} x ${product.name}</span><span>S/ ${(product.price * item.quantity).toFixed(2)}</span></div>`;
-                                }).join('')}
-                            </div>
-                            <div class="flex justify-between font-bold text-lg mt-2"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
-                            <button id="next-step-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Paso 3</button>
-                        </div>
-                    `;
-                } else if (step === 3) { // Pago (Simulado)
-                    content = `
-                        <button id="close-checkout-btn" class="absolute top-4 right-4 text-3xl">&times;</button>
-                        <h2 class="text-3xl font-bold mb-2">Checkout</h2>
-                        <div class="text-sm text-gray-500 mb-6">Paso 3 de 3: Pago (Simulado)</div>
-                        <div class="max-w-md mx-auto p-6 bg-gray-50 rounded-lg text-center">
-                            <p class="text-lg font-semibold mb-4">Total a pagar: <span class="font-bold">S/ ${total.toFixed(2)}</span></p>
-                            <p class="text-gray-700 mb-6">En esta demostración, el pago es simulado.</p>
-                            <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido Simulado</button>
+                             <button id="finish-order-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Finalizar Pedido Simulado</button>
                         </div>
                     `;
                 } else if (step === 4) { // Confirmación (Simulada)
@@ -717,21 +825,116 @@
 
                 document.getElementById('close-checkout-btn')?.addEventListener('click', closeCheckoutModal);
                 
-                document.getElementById('next-step-btn')?.addEventListener('click', () => {
-                    if (step === 1) renderCheckout(2);
-                    else if (step === 2) renderCheckout(3);
+                // Event listener para el formulario de envío (Paso 1)
+                const shippingForm = document.getElementById('shipping-form');
+                shippingForm?.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    // Almacenar datos del cliente al avanzar al paso 2
+                    if (appState.checkoutShippingMethod === 'delivery') {
+                        appState.customerInfo.fullName = document.getElementById('shipping-fullName').value;
+                        appState.customerInfo.lastName = document.getElementById('shipping-lastName').value;
+                        appState.customerInfo.email = document.getElementById('shipping-email').value;
+                        appState.customerInfo.phone = document.getElementById('shipping-phone').value;
+                        appState.customerInfo.dni = document.getElementById('customer-dni').value;
+                        appState.customerInfo.address = document.getElementById('shipping-address').value;
+                        appState.customerInfo.reference = document.getElementById('shipping-reference').value;
+                        appState.customerInfo.city = document.getElementById('shipping-city').value;
+                        appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
+                    } else {
+                        appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
+                        appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
+                        appState.customerInfo.dni = document.getElementById('customer-dni').value; // Capture DNI for pickup
+                    }
+                    renderCheckout(2);
                 });
 
-                document.getElementById('finish-order-btn')?.addEventListener('click', () => {
-                    // Simular que el pedido se procesó
+                document.querySelectorAll('input[name="deliveryMethod"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        appState.checkoutShippingMethod = e.target.value;
+                        renderCheckout(1); // Volver a renderizar para actualizar campos de envío
+                    });
+                });
+                
+                document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
+
+                document.getElementById('finish-order-btn')?.addEventListener('click', async (event) => { // Added 'event' parameter
+                    const finishOrderBtn = event.target; // Get a reference to the button
+                    
+                    // Disable the button and change its text to prevent multiple clicks
+                    finishOrderBtn.disabled = true;
+                    finishOrderBtn.textContent = 'Procesando pedido...';
+                    finishOrderBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
+                    // Recolectar datos de pago antes de enviar
+                    const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
+                    if (!selectedPaymentMethodRadio) {
+                        const messageBox = document.createElement('p');
+                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+                        messageBox.textContent = 'Por favor, selecciona un método de pago.';
+                        finishOrderBtn.parentNode.insertBefore(messageBox, finishOrderBtn);
+                        setTimeout(() => messageBox.remove(), 3000);
+                        
+                        // Re-enable button if validation fails
+                        finishOrderBtn.disabled = false;
+                        finishOrderBtn.textContent = 'Finalizar Pedido Simulado';
+                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+
+                    appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value;
+                    let paymentNumberInput, orderDateInput, orderTimeInput;
+
+                    if (appState.paymentInfo.paymentMethod === 'yapeplin') {
+                        paymentNumberInput = document.getElementById('payment-number-yapeplin');
+                        orderDateInput = document.getElementById('order-date-yapeplin');
+                        orderTimeInput = document.getElementById('order-time-yapeplin');
+                    } else if (appState.paymentInfo.paymentMethod === 'transferencia') {
+                        paymentNumberInput = document.getElementById('payment-number-transferencia');
+                        orderDateInput = document.getElementById('order-date-transferencia');
+                        orderTimeInput = document.getElementById('order-time-transferencia');
+                    }
+
+                    appState.paymentInfo.paymentNumber = paymentNumberInput ? paymentNumberInput.value : '';
+                    appState.paymentInfo.orderDate = orderDateInput ? orderDateInput.value : '';
+                    appState.paymentInfo.orderTime = orderTimeInput ? orderTimeInput.value : '';
+
+                    // Enviar datos del pedido a Google Apps Script (SIMULADO en esta versión)
+                    // console.log('Pedido simulado:', {
+                    //     timestamp: new Date().toLocaleString(),
+                    //     orderId: `ORD-${Date.now()}`,
+                    //     customer: appState.customerInfo,
+                    //     deliveryMethod: appState.checkoutShippingMethod,
+                    //     items: appState.cart.map(item => {
+                    //         const product = appState.products.find(p => p.id === item.id);
+                    //         return {
+                    //                 name: product.name,
+                    //                 quantity: item.quantity,
+                    //                 price: product.price,
+                    //                 size: item.size,
+                    //                 color: item.color
+                    //         };
+                    //     }),
+                    //     subtotal: subtotal.toFixed(2),
+                    //     shippingCost: shippingCost.toFixed(2),
+                    //     total: total.toFixed(2),
+                    //     payment: appState.paymentInfo
+                    // });
+                    console.log('Pedido simulado enviado. No hay integración real con Google Apps Script en esta versión.');
+                    // Puedes añadir un indicador de éxito visual aquí si lo deseas.
+
+                    // Limpiar carrito y mostrar confirmación
                     appState.cart = [];
                     renderCart();
                     renderCheckout(4);
+
+                    // No re-habilitar el botón aquí si el pedido fue exitoso y se pasa al paso de confirmación.
+                    // Si el usuario regresa y quiere hacer otro pedido, el botón de "Proceder al Pago"
+                    // ya estará disponible si el carrito no está vacío.
                 });
                 
                 document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
                     closeCheckoutModal();
-                    showHome();
+                    showHome(); // Volver a la página de portada
                 });
             };
 
