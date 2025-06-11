@@ -51,7 +51,7 @@
             <h2 class="text-3xl font-bold mb-6 accent-color-text">Acceso de Administrador Esvi Atelier</h2>
             <form id="login-form" class="space-y-4">
                 <input type="email" id="admin-username" placeholder="Correo (ej: viniesilva29@gmail.com)" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                <input type="password" id="admin-password" placeholder="Contraseña (ej: 123456789)" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                <input type="password" id="admin-password" placeholder="Contraseña (ej: 123456789)" class="w-full p-3 accent-color text-white font-bold rounded-lg hover:opacity-90 transition-opacity" required>
                 <button type="submit" class="w-full p-3 accent-color text-white font-bold rounded-lg hover:opacity-90 transition-opacity">Iniciar Sesión</button>
                 <p id="login-message" class="text-red-500 text-sm hidden">Usuario o contraseña incorrectos.</p>
             </form>
@@ -133,13 +133,15 @@
                     customerEmail: 'ana.garcia@example.com',
                     total: 350.00,
                     paymentMethod: 'Yape',
+                    paymentNumber: '567890123',
+                    paymentDate: '2025-06-10',
+                    paymentTime: '14:30',
                     status: 'Pendiente de Pago',
                     date: '2025-06-10',
                     items: [
                         { name: 'Vestido Floral de Verano', quantity: 1, price: 229.90, size: 'S', color: 'Beige' },
                         { name: 'Falda Midi Plisada', quantity: 1, price: 179.90, size: 'M', color: 'Negro' }
                     ],
-                    paymentScreenshotUrl: 'https://placehold.co/600x400/D3D3D3/000?text=Captura+Yape+ORD001',
                     deliveryMethod: 'delivery',
                     address: 'Calle Ficticia 123, Miraflores, Lima, 15023'
                 },
@@ -149,12 +151,14 @@
                     customerEmail: 'carlos.lopez@example.com',
                     total: 159.90,
                     paymentMethod: 'Transferencia BCP',
+                    paymentNumber: 'B-987654321',
+                    paymentDate: '2025-06-09',
+                    paymentTime: '09:15',
                     status: 'Pago Recibido',
                     date: '2025-06-09',
                     items: [
                         { name: 'Camisa de Lino Clásica', quantity: 1, price: 159.90, size: 'L', color: 'Azul' }
                     ],
-                    paymentScreenshotUrl: 'https://placehold.co/600x400/D3D3D3/000?text=Captura+BCP+ORD002',
                     deliveryMethod: 'pickup',
                     pickupName: 'Carlos López',
                     pickupEmail: 'carlos.lopez@example.com'
@@ -165,12 +169,14 @@
                     customerEmail: 'sofia.diaz@example.com',
                     total: 129.90,
                     paymentMethod: 'Plin',
+                    paymentNumber: 'P-123456789',
+                    paymentDate: '2025-06-08',
+                    paymentTime: '11:00',
                     status: 'Procesando',
                     date: '2025-06-08',
                     items: [
                         { name: 'Conjunto de Buzo Infantil', quantity: 1, price: 129.90, size: 'XS', color: 'Azul' }
                     ],
-                    paymentScreenshotUrl: 'https://placehold.co/600x400/D3D3D3/000?text=Captura+Plin+ORD003',
                     deliveryMethod: 'delivery',
                     address: 'Av. Siempre Viva 456, San Isidro, Lima, 15024'
                 },
@@ -180,12 +186,14 @@
                     customerEmail: 'juan.perez@example.com',
                     total: 79.90,
                     paymentMethod: 'Transferencia Interbank',
+                    paymentNumber: 'I-555444333',
+                    paymentDate: '2025-06-07',
+                    paymentTime: '16:45',
                     status: 'Completado',
                     date: '2025-06-07',
                     items: [
                         { name: 'Polo Básico de Algodón', quantity: 1, price: 79.90, size: 'M', color: 'Negro' }
                     ],
-                    paymentScreenshotUrl: 'https://placehold.co/600x400/D3D3D3/000?text=Captura+Interbank+ORD004',
                     deliveryMethod: 'pickup',
                     pickupName: 'Juan Pérez',
                     pickupEmail: 'juan.perez@example.com'
@@ -252,18 +260,19 @@
                     <p><span class="font-bold">Total:</span> S/ ${order.total.toFixed(2)}</p>
                     <p><span class="font-bold">Método de Pago:</span> ${order.paymentMethod}</p>
                     <p><span class="font-bold">Estado:</span> ${order.status}</p>
-                    <p><span class="font-bold">Fecha:</span> ${order.date}</p>
+                    <p><span class="font-bold">Fecha del Pedido:</span> ${order.date}</p>
                     <p><span class="font-bold">Método de Entrega:</span> ${order.deliveryMethod === 'delivery' ? 'Envío a domicilio' : 'Recoger en tienda'}</p>
                     ${order.deliveryMethod === 'delivery' ? `<p><span class="font-bold">Dirección:</span> ${order.address}</p>` : `<p><span class="font-bold">Nombre para Recoger:</span> ${order.pickupName}</p><p><span class="font-bold">Email de Contacto:</span> ${order.pickupEmail}</p>`}
                     
+                    <h4 class="font-bold mt-4 mb-2">Detalles del Pago (Corroboración):</h4>
+                    <p><span class="font-bold">Número de Pago:</span> ${order.paymentNumber || 'N/A'}</p>
+                    <p><span class="font-bold">Fecha del Pago:</span> ${order.paymentDate || 'N/A'}</p>
+                    <p><span class="font-bold">Hora del Pago:</span> ${order.paymentTime || 'N/A'}</p>
+
                     <h4 class="font-bold mt-4 mb-2">Productos:</h4>
                     <ul class="list-disc list-inside space-y-1 ml-4">
                         ${order.items.map(item => `<li>${item.quantity} x ${item.name} (Talla: ${item.size}, Color: ${item.color}) - S/ ${item.price.toFixed(2)}</li>`).join('')}
                     </ul>
-
-                    <h4 class="font-bold mt-4 mb-2">Captura de Pago:</h4>
-                    ${order.paymentScreenshotUrl ? `<img src="${order.paymentScreenshotUrl}" alt="Captura de Pago" class="w-full h-auto max-w-md mx-auto border rounded-lg shadow-sm">` : '<p>No se adjuntó captura de pantalla.</p>'}
-                    <p class="text-sm text-gray-500 mt-2 text-center">(Esta imagen es un marcador de posición. En un sistema real, la captura de pantalla se subiría a un almacenamiento en la nube y se mostraría aquí.)</p>
                 `;
                 orderDetailModal.classList.remove('opacity-0', 'pointer-events-none');
                 modalOrderContent.parentElement.classList.remove('scale-95');
