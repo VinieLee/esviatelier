@@ -3,26 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Primera Web Gratis en GitHub Pages</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 100px;
-            background-color: #e6f7ff;
-            color: #333;
-        }
-        h1 {
-            color: #0056b3;
-        }
-        p {
-            font-size: 1.2em;
-        }
-    </style>
+    <title>Tu Tienda de Ropa - Moderna y Minimalista</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>¡Hola desde mi página gratis en GitHub Pages!</h1>
-    <p>¡Esta es la web del proyecto `esviateliere`!</p>
-    <p>Puedes editar este archivo para personalizar tu web.</p>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <a href="index.html">TU LOGO</a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#">Hombre</a></li>
+                    <li><a href="#">Mujer</a></li>
+                    <li><a href="#">Infantil</a></li>
+                    <li><a href="#">Ofertas</a></li>
+                    <li><a href="#">Novedades</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <div class="search-bar">
+                    <input type="text" placeholder="Buscar productos...">
+                    <button type="submit"><img src="https://img.icons8.com/ios-filled/24/000000/search--v1.png" alt="Buscar"></button>
+                </div>
+                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/shopping-cart.png" alt="Carrito"></a>
+                <a href="#" class="icon-link"><img src="https://img.icons8.com/ios-filled/24/000000/user--v1.png" alt="Cuenta"></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <h1>Descubre la Última Moda</h1>
+            <p>Estilo minimalista, calidad excepcional.</p>
+            <a href="#" class="btn primary-btn">Comprar Ahora</a>
+        </section>
+
+        <section class="products-showcase">
+            <h2>Nuestros Productos Destacados</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/300x400?text=Camisa+Ejemplo" alt="Camisa Casual">
+                    <h3>Camisa de Lino</h3>
+                    <p class="price">$39.99</p>
+                    <a href="#" class="btn add-to-cart-btn">Ver Producto</a>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/300x400?text=Pantalón+Ejemplo" alt="Pantalón Casual">
+                    <h3>Pantalón Chino</h3>
+                    <p class="price">$49.99</p>
+                    <a href="#" class="btn add-to-cart-btn">Ver Producto</a>
+                </div>
+                <div class="product-card">
+                    <img src="https://via.placeholder.com/300x400?text=Vestido+Ejemplo" alt="Vestido Verano">
+                    <h3>Vestido Floral</h3>
+                    <p class="price">$59.99</p>
+                    <a href="#" class="btn add-to-cart-btn">Ver Producto</a>
+                </div>
+                 <div class="product-card">
+                    <img src="https://via.placeholder.com/300x400?text=Zapatillas+Ejemplo" alt="Zapatillas Deportivas">
+                    <h3>Zapatillas Urbanas</h3>
+                    <p class="price">$69.99</p>
+                    <a href="#" class="btn add-to-cart-btn">Ver Producto</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="newsletter-section">
+            <h2>Suscríbete a Nuestro Newsletter</h2>
+            <p>Recibe las últimas noticias y ofertas exclusivas.</p>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Tu correo electrónico" required>
+                <button type="submit" class="btn primary-btn">Suscribirme</button>
+            </form>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Acerca de Nosotros</h3>
+                <p>Tu Tienda de Ropa ofrece moda moderna y de calidad para todos.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Ayuda</h3>
+                <ul>
+                    <li><a href="#">Preguntas Frecuentes</a></li>
+                    <li><a href="#">Política de Devoluciones</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Síguenos</h3>
+                <div class="social-links">
+                    <a href="#"><img src="https://img.icons8.com/ios-filled/24/000000/facebook-new.png" alt="Facebook"></a>
+                    <a href="#"><img src="https://img.icons8.com/ios-filled/24/000000/instagram-new.png" alt="Instagram"></a>
+                    <a href="#"><img src="https://img.icons8.com/ios-filled/24/000000/twitter--v1.png" alt="Twitter"></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tu Tienda de Ropa. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Aquí podrías añadir JavaScript para funcionalidades frontend básicas
+        // como un menú hamburguesa para móviles o una barra de búsqueda que muestre sugerencias.
+        // Las funcionalidades como carrito de compras, checkout y pagos reales requieren backend.
+
+        // Ejemplo: para la búsqueda
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', function() {
+            const query = this.value;
+            // Aquí iría la lógica para sugerencias, pero solo funciona con datos de backend.
+            // Para una web estática, podrías tener una lista predefinida o simular.
+            console.log('Buscando: ' + query);
+        });
+
+        // Simulación básica de "Agregar al carrito"
+        document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                alert('Producto añadido al carrito (simulado). Para una función real, se necesita un backend.');
+                // En una app real, esto enviaría el producto a un backend o lo guardaría localmente.
+            });
+        });
+    </script>
 </body>
 </html>
