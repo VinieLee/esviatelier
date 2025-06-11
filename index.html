@@ -310,11 +310,11 @@
                     email: '',
                     address: '',
                     reference: '',
-                    city: '',
+                    // Se elimina 'city' del estado
                     zipCode: '',
-                    department: '', // New field
-                    province: '',   // New field
-                    district: '',   // New field
+                    department: '',
+                    province: '',
+                    district: '',
                     pickupName: '',
                     pickupEmail: ''
                 },
@@ -693,7 +693,6 @@
                                         <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                         <input type="text" id="shipping-address" placeholder="Dirección (Calle, Número)" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
                                         <input type="text" id="shipping-reference" placeholder="Referencia (ej: A lado de la farmacia)" value="${appState.customerInfo.reference}" class="w-full p-3 border rounded-lg">
-                                        <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
                                         <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
                                         <input type="text" id="shipping-department" placeholder="Departamento" value="${appState.customerInfo.department}" class="w-full p-3 border rounded-lg" required>
                                         <input type="text" id="shipping-province" placeholder="Provincia" value="${appState.customerInfo.province}" class="w-full p-3 border rounded-lg" required>
@@ -747,7 +746,7 @@
                                             ${appState.customerInfo.address}<br>
                                             ${appState.customerInfo.reference ? `Ref: ${appState.customerInfo.reference}<br>` : ''}
                                             ${appState.customerInfo.district}, ${appState.customerInfo.province}, ${appState.customerInfo.department}<br>
-                                            ${appState.customerInfo.city}, ${appState.customerInfo.zipCode}
+                                            Código Postal: ${appState.customerInfo.zipCode}
                                         </p>
                                     ` : `
                                         <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
@@ -823,6 +822,7 @@
                                         <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
                                     </p>
                                     <div class="mt-4 ml-6 space-y-2">
+                                        <!-- Campos de número de operación, fecha y hora -->
                                         <input type="text" id="payment-number-input" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
                                         <input type="date" id="order-date-input" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
                                         <input type="time" id="order-time-input" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
@@ -862,7 +862,7 @@
                         appState.customerInfo.dni = document.getElementById('customer-dni').value;
                         appState.customerInfo.address = document.getElementById('shipping-address').value;
                         appState.customerInfo.reference = document.getElementById('shipping-reference').value;
-                        appState.customerInfo.city = document.getElementById('shipping-city').value;
+                        // appState.customerInfo.city = document.getElementById('shipping-city').value; // REMOVIDO: Campo Ciudad
                         appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
                         appState.customerInfo.department = document.getElementById('shipping-department').value; // Capturar Departamento
                         appState.customerInfo.province = document.getElementById('shipping-province').value;     // Capturar Provincia
@@ -940,6 +940,21 @@
                     appState.paymentInfo.orderDate = orderDateInput ? orderDateInput.value : '';
                     appState.paymentInfo.orderTime = orderTimeInput ? orderTimeInput.value : '';
 
+                    // Validación adicional para campos de pago si no están llenos
+                    if (!appState.paymentInfo.paymentNumber || !appState.paymentInfo.orderDate || !appState.paymentInfo.orderTime) {
+                        const messageBox = document.createElement('p');
+                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+                        messageBox.textContent = 'Por favor, completa el número de operación, fecha y hora.';
+                        finishOrderBtn.parentNode.insertBefore(messageBox, finishOrderBtn);
+                        setTimeout(() => messageBox.remove(), 3000);
+
+                        finishOrderBtn.disabled = false;
+                        finishOrderBtn.textContent = 'Finalizar Pedido';
+                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+
+
                     // Si es transferencia, validar que se haya seleccionado un banco
                     if (appState.paymentInfo.paymentMethod === 'Transferencia' && !appState.paymentInfo.bank) {
                         const messageBox = document.createElement('p');
@@ -974,7 +989,7 @@
                             clientEmail: appState.customerInfo.email,
                             shippingAddress: appState.customerInfo.address,
                             addressReference: appState.customerInfo.reference,
-                            city: appState.customerInfo.city,
+                            // city: appState.customerInfo.city, // REMOVIDO: Campo Ciudad
                             zipCode: appState.customerInfo.zipCode,
                             department: appState.customerInfo.department, // Incluir Departamento
                             province: appState.customerInfo.province,     // Incluir Provincia
