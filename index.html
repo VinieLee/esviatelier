@@ -303,23 +303,27 @@
                 currentView: 'home', // 'home' or 'catalog'
                 checkoutShippingMethod: 'delivery', // 'delivery' or 'pickup'
                 customerInfo: {
-                    fullName: '', // Se mapeará a clientName
-                    lastName: '', // Se mapeará a clientLastname
-                    dni: '', // Se mapeará a clientDNI
-                    phone: '', // Se mapeará a clientPhone
-                    email: '', // Se mapeará a clientEmail
-                    address: '', // Se mapeará a shippingAddress
-                    reference: '', // Se mapeará a addressReference
+                    fullName: '',
+                    lastName: '',
+                    dni: '',
+                    phone: '',
+                    email: '',
+                    address: '',
+                    reference: '',
                     city: '',
                     zipCode: '',
-                    // pickupName y pickupEmail ya no se envían al Apps Script si no están en los encabezados
-                    // paymentMethod se moverá directamente al customer object para el envío
+                    department: '', // New field
+                    province: '',   // New field
+                    district: '',   // New field
+                    pickupName: '',
+                    pickupEmail: ''
                 },
-                paymentInfo: {
-                    paymentMethod: '',
+                paymentInfo: { // Se usará para recoger y enviar detalles de pago específicos
+                    paymentMethod: '', // 'Yape', 'Plin', 'Transferencia'
                     paymentNumber: '',
                     orderDate: '',
-                    orderTime: ''
+                    orderTime: '',
+                    bank: '' // Will store selected bank for 'Transferencia'
                 }
             };
 
@@ -689,10 +693,11 @@
                                         <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                         <input type="text" id="shipping-address" placeholder="Dirección (Calle, Número)" value="${appState.customerInfo.address}" class="w-full p-3 border rounded-lg" required>
                                         <input type="text" id="shipping-reference" placeholder="Referencia (ej: A lado de la farmacia)" value="${appState.customerInfo.reference}" class="w-full p-3 border rounded-lg">
-                                        <div class="flex gap-4">
-                                            <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
-                                            <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
-                                        </div>
+                                        <input type="text" id="shipping-city" placeholder="Ciudad" value="${appState.customerInfo.city}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
+                                        <input type="text" id="shipping-department" placeholder="Departamento" value="${appState.customerInfo.department}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-province" placeholder="Provincia" value="${appState.customerInfo.province}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="shipping-district" placeholder="Distrito" value="${appState.customerInfo.district}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     ` : `
                                     <div class="space-y-4">
@@ -734,7 +739,16 @@
                                 <div class="bg-gray-50 p-6 rounded-lg mb-6">
                                     <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
-                                        <p class="text-gray-600">${appState.customerInfo.fullName} ${appState.customerInfo.lastName}<br>DNI: ${appState.customerInfo.dni}<br>Celular: ${appState.customerInfo.phone}<br>${appState.customerInfo.email}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Referencia: ${appState.customerInfo.reference}</p>
+                                        <p class="text-gray-600">
+                                            ${appState.customerInfo.fullName} ${appState.customerInfo.lastName}<br>
+                                            DNI: ${appState.customerInfo.dni}<br>
+                                            Celular: ${appState.customerInfo.phone}<br>
+                                            ${appState.customerInfo.email}<br>
+                                            ${appState.customerInfo.address}<br>
+                                            ${appState.customerInfo.reference ? `Ref: ${appState.customerInfo.reference}<br>` : ''}
+                                            ${appState.customerInfo.district}, ${appState.customerInfo.province}, ${appState.customerInfo.department}<br>
+                                            ${appState.customerInfo.city}, ${appState.customerInfo.zipCode}
+                                        </p>
                                     ` : `
                                         <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
                                         <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}<br>DNI: ${appState.customerInfo.dni}<br>Correo: ${appState.customerInfo.pickupEmail}</p>
@@ -776,31 +790,42 @@
                         <div class="max-w-md mx-auto">
                             <p class="text-center text-lg mb-4">Total a pagar: <span class="font-bold">S/ ${total.toFixed(2)}</span></p>
                             <div class="space-y-4">
+                                <!-- Opciones de Método de Pago con radio buttons -->
                                 <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="yapeplin" class="mr-2 accent-color" checked><span>Yape / Plin</span></label>
+                                    <label class="font-bold flex items-center mb-2">
+                                        <input type="radio" name="paymentMethodRadio" value="Yape" class="mr-2 accent-color" ${appState.paymentInfo.paymentMethod === 'Yape' ? 'checked' : ''}>
+                                        <span>Yape</span>
+                                    </label>
+                                    <label class="font-bold flex items-center mb-2">
+                                        <input type="radio" name="paymentMethodRadio" value="Plin" class="mr-2 accent-color" ${appState.paymentInfo.paymentMethod === 'Plin' ? 'checked' : ''}>
+                                        <span>Plin</span>
+                                    </label>
+                                    <label class="font-bold flex items-center mb-2">
+                                        <input type="radio" name="paymentMethodRadio" value="Transferencia" class="mr-2 accent-color" ${appState.paymentInfo.paymentMethod === 'Transferencia' ? 'checked' : ''}>
+                                        <span>Transferencia Bancaria</span>
+                                    </label>
+
+                                    <!-- Selección de Banco, visible solo si se elige Transferencia -->
+                                    <div id="bank-selection-container" class="${appState.paymentInfo.paymentMethod === 'Transferencia' ? 'block' : 'hidden'} ml-6 mt-2 space-y-2">
+                                        <label for="payment-bank" class="block text-sm font-semibold text-gray-700">Selecciona tu Banco:</label>
+                                        <select id="payment-bank" class="w-full p-2 border rounded-lg">
+                                            <option value="">-- Seleccionar Banco --</option>
+                                            <option value="BCP" ${appState.paymentInfo.bank === 'BCP' ? 'selected' : ''}>BCP</option>
+                                            <option value="BBVA" ${appState.paymentInfo.bank === 'BBVA' ? 'selected' : ''}>BBVA</option>
+                                            <option value="Interbank" ${appState.paymentInfo.bank === 'Interbank' ? 'selected' : ''}>Interbank</option>
+                                            <option value="Scotiabank" ${appState.paymentInfo.bank === 'Scotiabank' ? 'selected' : ''}>Scotiabank</option>
+                                            <option value="Otros" ${appState.paymentInfo.bank === 'Otros' ? 'selected' : ''}>Otros</option>
+                                        </select>
+                                    </div>
+                                    
                                     <p class="text-sm text-gray-600 mt-2 ml-6">
                                         Realiza tu pago a nuestro número de celular: <span class="font-semibold">987 654 321</span>.<br>
                                         <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
                                     </p>
                                     <div class="mt-4 ml-6 space-y-2">
-                                        <input type="text" id="payment-number-yapeplin" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
-                                        <input type="date" id="order-date-yapeplin" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
-                                        <input type="time" id="order-time-yapeplin" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
-                                    </div>
-                                </div>
-                                <div class="border p-4 rounded-lg">
-                                    <label class="font-bold flex items-center"><input type="radio" name="payment" value="transferencia" class="mr-2 accent-color"><span>Transferencia Bancaria</span></label>
-                                     <p class="text-sm text-gray-600 mt-2 ml-6">
-                                        Realiza la transferencia a una de nuestras cuentas:<br>
-                                        <span class="font-semibold">BCP: 123-456789-0-12</span><br>
-                                        <span class="font-semibold">BBVA: 001-123-000456789</span><br>
-                                        <span class="font-semibold">Interbank: 890-1234567890</span><br>
-                                        <span class="text-red-500 font-semibold">¡IMPORTANTEl!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
-                                    </p>
-                                    <div class="mt-4 ml-6 space-y-2">
-                                        <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
-                                        <input type="date" id="order-date-transferencia" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
-                                        <input type="time" id="order-time-transferencia" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
+                                        <input type="text" id="payment-number-input" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
+                                        <input type="date" id="order-date-input" value="${appState.paymentInfo.orderDate}" class="w-full p-2 border rounded-lg">
+                                        <input type="time" id="order-time-input" value="${appState.paymentInfo.orderTime}" class="w-full p-2 border rounded-lg">
                                     </div>
                                 </div>
                             </div>
@@ -839,6 +864,9 @@
                         appState.customerInfo.reference = document.getElementById('shipping-reference').value;
                         appState.customerInfo.city = document.getElementById('shipping-city').value;
                         appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
+                        appState.customerInfo.department = document.getElementById('shipping-department').value; // Capturar Departamento
+                        appState.customerInfo.province = document.getElementById('shipping-province').value;     // Capturar Provincia
+                        appState.customerInfo.district = document.getElementById('shipping-district').value;     // Capturar Distrito
                     } else {
                         appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
                         appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
@@ -856,6 +884,28 @@
                 
                 document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
+                // Payment Method Radio Buttons handler (Yape, Plin, Transferencia)
+                document.querySelectorAll('input[name="paymentMethodRadio"]').forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        appState.paymentInfo.paymentMethod = e.target.value; // 'Yape', 'Plin', 'Transferencia'
+                        const bankSelectionContainer = document.getElementById('bank-selection-container');
+                        if (e.target.value === 'Transferencia') { // Si selecciona "Transferencia"
+                            bankSelectionContainer.classList.remove('hidden');
+                            bankSelectionContainer.classList.add('block');
+                        } else { // Si selecciona Yape o Plin
+                            bankSelectionContainer.classList.remove('block');
+                            bankSelectionContainer.classList.add('hidden');
+                            appState.paymentInfo.bank = ''; // Limpiar el banco seleccionado si no es transferencia
+                        }
+                    });
+                });
+
+                // Bank Selection Dropdown handler (only if 'Transferencia' is selected)
+                document.getElementById('payment-bank')?.addEventListener('change', (e) => {
+                    appState.paymentInfo.bank = e.target.value;
+                });
+
+
                 document.getElementById('finish-order-btn')?.addEventListener('click', async (event) => { // Added 'event' parameter
                     const finishOrderBtn = event.target; // Get a reference to the button
                     
@@ -865,7 +915,7 @@
                     finishOrderBtn.classList.add('opacity-50', 'cursor-not-allowed');
 
                     // Recolectar datos de pago antes de enviar
-                    const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
+                    const selectedPaymentMethodRadio = document.querySelector('input[name="paymentMethodRadio"]:checked');
                     if (!selectedPaymentMethodRadio) {
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
@@ -880,9 +930,36 @@
                         return;
                     }
 
-                    // No almacenar paymentNumber, orderDate, orderTime en appState.paymentInfo para el envío si no son mapeados.
-                    // Solo usamos appState.paymentInfo.paymentMethod para el envío.
-                    appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value;
+                    appState.paymentInfo.paymentMethod = selectedPaymentMethodRadio.value; // 'Yape', 'Plin', 'Transferencia'
+                    
+                    let paymentNumberInput = document.getElementById('payment-number-input'); // Unified ID
+                    let orderDateInput = document.getElementById('order-date-input');       // Unified ID
+                    let orderTimeInput = document.getElementById('order-time-input');       // Unified ID
+
+                    appState.paymentInfo.paymentNumber = paymentNumberInput ? paymentNumberInput.value : '';
+                    appState.paymentInfo.orderDate = orderDateInput ? orderDateInput.value : '';
+                    appState.paymentInfo.orderTime = orderTimeInput ? orderTimeInput.value : '';
+
+                    // Si es transferencia, validar que se haya seleccionado un banco
+                    if (appState.paymentInfo.paymentMethod === 'Transferencia' && !appState.paymentInfo.bank) {
+                        const messageBox = document.createElement('p');
+                        messageBox.className = 'text-red-500 text-sm mt-2 text-center';
+                        messageBox.textContent = 'Por favor, selecciona un banco para la transferencia.';
+                        // Insert message near the bank select or button
+                        document.getElementById('payment-bank')?.parentNode.insertBefore(messageBox, document.getElementById('payment-bank').nextSibling);
+                        setTimeout(() => messageBox.remove(), 3000);
+                        
+                        finishOrderBtn.disabled = false;
+                        finishOrderBtn.textContent = 'Finalizar Pedido';
+                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+
+                    // Construir el valor final del método de pago para el script
+                    let finalPaymentMethodForScript = appState.paymentInfo.paymentMethod;
+                    if (appState.paymentInfo.paymentMethod === 'Transferencia' && appState.paymentInfo.bank) {
+                        finalPaymentMethodForScript = `Transferencia ${appState.paymentInfo.bank}`;
+                    }
 
 
                     // Enviar datos del pedido a Google Apps Script
@@ -899,25 +976,29 @@
                             addressReference: appState.customerInfo.reference,
                             city: appState.customerInfo.city,
                             zipCode: appState.customerInfo.zipCode,
-                            // El método de pago se envía como parte del objeto customer, como lo espera el script
-                            paymentMethod: appState.paymentInfo.paymentMethod
+                            department: appState.customerInfo.department, // Incluir Departamento
+                            province: appState.customerInfo.province,     // Incluir Provincia
+                            district: appState.customerInfo.district,     // Incluir Distrito
                         },
-                        // Se renombra 'items' a 'cart' y se mapean los campos necesarios
                         cart: appState.cart.map(item => {
                             const product = appState.products.find(p => p.id === item.id);
                             return {
                                 name: product.name,
                                 quantity: item.quantity,
                                 price: product.price,
-                                size: item.size
-                                // El color no es un campo individual en la columna 'Productos' del Apps Script,
-                                // se concatena en la cadena de descripción.
+                                size: item.size,
+                                color: item.color // Mantener color para la descripción de Productos
                             };
                         }),
-                        // Se renombra 'total' a 'totalAmount'
                         totalAmount: total.toFixed(2),
-                        // deliveryMethod se deja como top-level, ya que el script lo accede directamente
-                        deliveryMethod: appState.checkoutShippingMethod
+                        deliveryMethod: appState.checkoutShippingMethod,
+                        payment: { // Enviar el objeto payment completo como lo espera el script
+                            paymentMethod: finalPaymentMethodForScript, // Ahora incluye el banco si es transferencia
+                            paymentNumber: appState.paymentInfo.paymentNumber,
+                            orderDate: appState.paymentInfo.orderDate,
+                            orderTime: appState.paymentInfo.orderTime,
+                            // 'bank' ya no se envía como un campo separado aquí, se incorpora en paymentMethod
+                        }
                     };
                     
                     try {
