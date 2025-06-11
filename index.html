@@ -306,6 +306,7 @@
                     city: '',
                     zipCode: '',
                     phone: '',
+                    dni: '', // Added DNI
                     pickupName: '',
                     pickupEmail: ''
                 },
@@ -351,7 +352,7 @@
             const closeCartBtn = document.getElementById('close-cart-btn');
             const cartItemsContainer = document.getElementById('cart-items-container');
             const cartSubtotalEl = document.getElementById('cart-subtotal');
-            const cartCountEl = document = document.getElementById('cart-count');
+            const cartCountEl = document.getElementById('cart-count');
 
             const checkoutBtn = document.getElementById('checkout-btn');
             const checkoutModal = document.getElementById('checkout-modal');
@@ -626,6 +627,7 @@
                                             <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
                                         </div>
                                         <input type="tel" id="shipping-phone" placeholder="Teléfono" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     ` : `
                                     <div class="space-y-4">
@@ -634,6 +636,7 @@
                                         <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
                                         <input type="text" id="pickup-name" placeholder="Nombre completo para recoger" value="${appState.customerInfo.pickupName}" class="w-full p-3 border rounded-lg" required>
                                         <input type="email" id="pickup-email" placeholder="Correo electrónico de contacto" value="${appState.customerInfo.pickupEmail}" class="w-full p-3 border rounded-lg" required>
+                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     `}
                                     <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
@@ -666,10 +669,10 @@
                                 <div class="bg-gray-50 p-6 rounded-lg mb-6">
                                     <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
-                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Teléfono: ${appState.customerInfo.phone}</p>
+                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>DNI: ${appState.customerInfo.dni}<br>Teléfono: ${appState.customerInfo.phone}</p>
                                     ` : `
                                         <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
-                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}</p>
+                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}<br>DNI: ${appState.customerInfo.dni}</p>
                                     `}
                                     <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
                                 </div>
@@ -767,9 +770,11 @@
                         appState.customerInfo.city = document.getElementById('shipping-city').value;
                         appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
                         appState.customerInfo.phone = document.getElementById('shipping-phone').value;
+                        appState.customerInfo.dni = document.getElementById('customer-dni').value; // Capture DNI
                     } else {
                         appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
                         appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
+                        appState.customerInfo.dni = document.getElementById('customer-dni').value; // Capture DNI for pickup
                     }
                     renderCheckout(2);
                 });
@@ -783,15 +788,27 @@
                 
                 document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
-                document.getElementById('finish-order-btn')?.addEventListener('click', async () => {
+                document.getElementById('finish-order-btn')?.addEventListener('click', async (event) => { // Added 'event' parameter
+                    const finishOrderBtn = event.target; // Get a reference to the button
+                    
+                    // Disable the button and change its text to prevent multiple clicks
+                    finishOrderBtn.disabled = true;
+                    finishOrderBtn.textContent = 'Procesando pedido...';
+                    finishOrderBtn.classList.add('opacity-50', 'cursor-not-allowed');
+
                     // Recolectar datos de pago antes de enviar
                     const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
                     if (!selectedPaymentMethodRadio) {
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
                         messageBox.textContent = 'Por favor, selecciona un método de pago.';
-                        document.getElementById('finish-order-btn').parentNode.insertBefore(messageBox, document.getElementById('finish-order-btn'));
+                        finishOrderBtn.parentNode.insertBefore(messageBox, finishOrderBtn);
                         setTimeout(() => messageBox.remove(), 3000);
+                        
+                        // Re-enable button if validation fails
+                        finishOrderBtn.disabled = false;
+                        finishOrderBtn.textContent = 'Finalizar Pedido';
+                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         return;
                     }
 
@@ -853,8 +870,13 @@
                         const errorMessage = document.createElement('p');
                         errorMessage.className = 'text-red-500 text-sm mt-2 text-center';
                         errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
-                        document.getElementById('finish-order-btn').parentNode.insertBefore(errorMessage, document.getElementById('finish-order-btn'));
+                        finishOrderBtn.parentNode.insertBefore(errorMessage, finishOrderBtn);
                         setTimeout(() => errorMessage.remove(), 5000);
+                        
+                        // Re-enable button on error
+                        finishOrderBtn.disabled = false;
+                        finishOrderBtn.textContent = 'Finalizar Pedido';
+                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         return; // Detener el flujo si hay un error de envío
                     }
 
@@ -862,6 +884,10 @@
                     appState.cart = [];
                     renderCart();
                     renderCheckout(4);
+
+                    // No re-habilitar el botón aquí si el pedido fue exitoso y se pasa al paso de confirmación.
+                    // Si el usuario regresa y quiere hacer otro pedido, el botón de "Proceder al Pago"
+                    // ya estará disponible si el carrito no está vacío.
                 });
                 
                 document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
