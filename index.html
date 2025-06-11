@@ -329,23 +329,23 @@
 
             const mockProducts = [
                 // Hombre (5 productos)
-                { id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino+Hombre', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
-                { id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino+Hombre', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
-                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
-                { id: 10, name: 'Chaqueta de Mezclilla Casual', category: 'Hombre', tipo: 'Chaqueta', price: 249.90, sizes: ['M', 'L', 'XL'], colors: ['Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/A0D6B4/333?text=Chaqueta+Mezclilla', novelty: false, onSale: true, description: 'Una chaqueta atemporal para un estilo casual y relajado.'},
-                { id: 11, name: 'Short Bermuda Estampado', category: 'Hombre', tipo: 'Short', price: 99.90, sizes: ['S', 'M', 'L'], colors: ['Azul', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/B2D3C2/333?text=Short+Bermuda+Hombre', novelty: true, onSale: false, description: 'Short cómodo y con estilo para los días de verano.'},
+                { id: 1, name: 'Camisa de Lino Clásica', category: 'Hombre', tipo: 'Camisa', price: 159.90, sizes: ['XS', 'S', 'M', 'L', 'XL'], colors: ['Blanco', 'Azul'], material: 'Lino', inStock: true, image: 'https://placehold.co/400x500/F0F8FF/333?text=Camisa+Lino+Hombre', novelty: true, onSale: false, description: 'Una camisa de lino versátil y fresca, perfecta para cualquier ocasión.'},
+                { id: 2, name: 'Pantalón Chino Moderno', category: 'Hombre', tipo: 'Pantalón', price: 189.90, sizes: ['26', '28', '30', '32', '34', '36'], colors: ['Negro', 'Verde', 'Azul'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/D2B48C/333?text=Pantalón+Chino+Hombre', novelty: false, onSale: false, description: 'Corte slim-fit para un look moderno y cómodo.' },
+                { id: 5, name: 'Polo Básico de Algodón', category: 'Hombre', tipo: 'Polo', price: 79.90, sizes: ['XS', 'S', 'M', 'L', 'XL'], colors: ['Negro', 'Blanco', 'Azul'], material: 'Algodón Pima', inStock: true, image: 'https://placehold.co/400x500/FFFFFF/333?text=Polo+Básico+Hombre', novelty: false, onSale: false, description: 'La base de cualquier guardarropa, con la suavidad del algodón pima.'},
+                { id: 10, name: 'Chaqueta de Mezclilla Casual', category: 'Hombre', tipo: 'Chaqueta', price: 249.90, sizes: ['XS', 'S', 'M', 'L', 'XL'], colors: ['Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/A0D6B4/333?text=Chaqueta+Mezclilla', novelty: false, onSale: true, description: 'Una chaqueta atemporal para un estilo casual y relajado.'},
+                { id: 11, name: 'Short Bermuda Estampado', category: 'Hombre', tipo: 'Short', price: 99.90, sizes: ['XS', 'S', 'M', 'L', 'XL'], colors: ['Azul', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/B2D3C2/333?text=Short+Bermuda+Hombre', novelty: true, onSale: false, description: 'Short cómodo y con estilo para los días de verano.'},
 
                 // Mujer (5 productos)
-                { id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XS', 'S', 'M'], colors: ['Beige', 'Blanco'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral+Mujer', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
-                { id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['M', 'L'], colors: ['Beige', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca+Mujer', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
-                { id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['S', 'M'], colors: ['Beige', 'Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny+Mujer', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
-                { id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['S', 'M', 'L'], colors: ['Negro', 'Beige'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi+Mujer', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'},
-                { id: 12, name: 'Blusa de Seda Elegante', category: 'Mujer', tipo: 'Blusa', price: 165.00, sizes: ['S', 'M', 'L'], colors: ['Blanco', 'Negro', 'Rojo'], material: 'Seda', inStock: true, image: 'https://placehold.co/400x500/F8D8C2/333?text=Blusa+Seda+Mujer', novelty: true, onSale: false, description: 'Una blusa sofisticada para ocasiones especiales o un look de oficina.'},
+                { id: 3, name: 'Vestido Floral de Verano', category: 'Mujer', tipo: 'Vestido', price: 229.90, sizes: ['XXS', 'XS', 'S', 'M', 'L'], colors: ['Beige', 'Blanco'], material: 'Viscosa', inStock: true, image: 'https://placehold.co/400x500/FFC0CB/333?text=Vestido+Floral+Mujer', novelty: true, onSale: false, description: 'Ligero y femenino, ideal para los días de sol.'},
+                { id: 4, name: 'Chompa de Alpaca Suave', category: 'Mujer', tipo: 'Chompa', price: 349.90, sizes: ['XXS', 'XS', 'S', 'M', 'L'], colors: ['Beige', 'Gris'], material: 'Alpaca', inStock: false, image: 'https://placehold.co/400x500/E6E6FA/333?text=Chompa+Alpaca+Mujer', novelty: false, onSale: true, description: 'Calidez y estilo inigualables con la mejor fibra peruana.'},
+                { id: 6, name: 'Jean Skinny de Tiro Alto', category: 'Mujer', tipo: 'Pantalón', price: 199.90, sizes: ['26', '28', '30', '32', '34', '36'], colors: ['Beige', 'Azul'], material: 'Mezclilla', inStock: true, image: 'https://placehold.co/400x500/B0C4DE/333?text=Jean+Skinny+Mujer', novelty: false, onSale: false, description: 'Diseñado para realzar tu figura y ofrecer comodidad todo el día.'},
+                { id: 8, name: 'Falda Midi Plisada', category: 'Mujer', tipo: 'Falda', price: 179.90, sizes: ['XXS', 'XS', 'S', 'M', 'L'], colors: ['Negro', 'Beige'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/F5DEB3/333?text=Falda+Midi+Mujer', novelty: false, onSale: true, description: 'Elegancia y movimiento en una prenda atemporal.'},
+                { id: 12, name: 'Blusa de Seda Elegante', category: 'Mujer', tipo: 'Blusa', price: 165.00, sizes: ['XXS', 'XS', 'S', 'M', 'L'], colors: ['Blanco', 'Negro', 'Rojo'], material: 'Seda', inStock: true, image: 'https://placehold.co/400x500/F8D8C2/333?text=Blusa+Seda+Mujer', novelty: true, onSale: false, description: 'Una blusa sofisticada para ocasiones especiales o un look de oficina.'},
 
                 // Infantil (5 productos)
-                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['XS', 'S'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
-                { id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['XS', 'S', 'M'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'},
-                { id: 13, name: 'Chaleco Acolchado Infantil', category: 'Infantil', tipo: 'Chaleco', price: 85.00, sizes: ['XS', 'S', 'M'], colors: ['Azul', 'Verde'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/D0F0C0/333?text=Chaleco+Infantil', novelty: true, onSale: false, description: 'Chaleco ligero y cálido, ideal para el entretiempo.'},
+                { id: 7, name: 'Conjunto de Buzo Infantil', category: 'Infantil', tipo: 'Conjunto', price: 129.90, sizes: ['8', '10', '12', '14', '16'], colors: ['Rojo', 'Azul', 'Amarillo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/90EE90/333?text=Buzo+Infantil', novelty: true, onSale: false, description: 'Comodidad y diversión para los más pequeños de la casa.'},
+                { id: 9, name: 'Camiseta de Rayas Infantil', category: 'Infantil', tipo: 'Camisa', price: 69.90, sizes: ['8', '10', '12', '14', '16'], colors: ['Negro', 'Blanco'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/87CEFA/333?text=Camiseta+Infantil', novelty: false, onSale: false, description: 'Un clásico cómodo y divertido para los niños.'},
+                { id: 13, name: 'Chaleco Acolchado Infantil', category: 'Infantil', tipo: 'Chaleco', price: 85.00, sizes: ['8', '10', '12', '14', '16'], colors: ['Azul', 'Verde'], material: 'Poliéster', inStock: true, image: 'https://placehold.co/400x500/D0F0C0/333?text=Chaleco+Infantil', novelty: true, onSale: false, description: 'Chaleco ligero y cálido, ideal para el entretiempo.'},
                 { id: 14, name: 'Zapatillas Deportivas Infantil', category: 'Infantil', tipo: 'Zapatillas', price: 110.00, sizes: ['25', '28', '31'], colors: ['Rojo', 'Azul'], material: 'Sintético', inStock: true, image: 'https://placehold.co/400x500/C0E0F0/333?text=Zapatillas+Infantil', novelty: false, onSale: true, description: 'Zapatillas cómodas y duraderas para las aventuras de los niños.'},
                 { id: 15, name: 'Gorra de Sol Infantil', category: 'Infantil', tipo: 'Gorra', price: 45.00, sizes: ['Única'], colors: ['Amarillo', 'Rojo'], material: 'Algodón', inStock: true, image: 'https://placehold.co/400x500/F0F0D0/333?text=Gorra+Infantil', novelty: false, onSale: true, description: 'Protege del sol con estilo.'},
 
@@ -383,6 +383,53 @@
             
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+
+            // Definición de las guías de tallas
+            const sizeGuides = {
+                'Hombre': {
+                    headers: ['Talla', 'Pecho (cm)', 'Cintura (cm)', 'Cadera (cm)', 'Largo (cm)'],
+                    data: {
+                        'XS': ['84-88', '68-72', '90-94', '68-70'],
+                        'S': ['88-92', '72-76', '94-98', '70-72'],
+                        'M': ['96-100', '80-84', '102-106', '72-74'],
+                        'L': ['104-108', '88-92', '110-114', '74-76'],
+                        'XL': ['112-116', '96-100', '118-122', '76-78']
+                    }
+                },
+                'Mujer': {
+                    headers: ['Talla', 'Pecho (cm)', 'Cintura (cm)', 'Cadera (cm)', 'Largo (cm)'],
+                    data: {
+                        'XXS': ['76-80', '58-62', '82-86', '60-62'],
+                        'XS': ['80-84', '62-66', '86-90', '62-64'],
+                        'S': ['84-88', '66-70', '90-94', '64-66'],
+                        'M': ['92-96', '74-78', '98-102', '66-68'],
+                        'L': ['100-104', '82-86', '106-110', '68-70']
+                    },
+                    note: '*Nota: Para un ajuste más pegado, considera la talla anterior.'
+                },
+                'Infantil': {
+                    headers: ['Talla', 'Edad Aprox.', 'Largo (cm)', 'Ancho (cm)'],
+                    data: {
+                        '8': ['6-7 años', '50-52', '38-40'],
+                        '10': ['8-9 años', '54-56', '41-43'],
+                        '12': ['10-11 años', '58-60', '44-46'],
+                        '14': ['12-13 años', '62-64', '47-49'],
+                        '16': ['14-15 años', '66-68', '50-52']
+                    }
+                },
+                'Pantalón': { // Esta guía se usará para cualquier producto con tipo 'Pantalón'
+                    headers: ['Talla', 'Cintura (cm)', 'Largo (cm)'],
+                    data: {
+                        '26': ['66-70', '98-100'],
+                        '28': ['70-74', '100-102'],
+                        '30': ['74-78', '102-104'],
+                        '32': ['78-82', '104-106'],
+                        '34': ['82-86', '106-108'],
+                        '36': ['86-90', '108-110']
+                    }
+                }
+            };
+
 
             const updateBodyClass = (category) => {
                 bodyElement.className = ''; // Limpia todas las clases de categoría existentes
@@ -484,6 +531,42 @@
                 const product = appState.products.find(p => p.id == productId);
                 if (!product) return;
 
+                let sizeGuideHtml = '';
+                let selectedSizeGuide = null;
+
+                // Prioridad: Pantalón > Categoría de persona
+                if (product.tipo === 'Pantalón') {
+                    selectedSizeGuide = sizeGuides['Pantalón'];
+                } else if (product.category === 'Hombre') {
+                    selectedSizeGuide = sizeGuides['Hombre'];
+                } else if (product.category === 'Mujer') {
+                    selectedSizeGuide = sizeGuides['Mujer'];
+                } else if (product.category === 'Infantil') {
+                    selectedSizeGuide = sizeGuides['Infantil'];
+                }
+
+                if (selectedSizeGuide) {
+                    const headerRow = selectedSizeGuide.headers.map(header => `<th class="border px-2 py-1 bg-gray-100 text-sm">${header}</th>`).join('');
+                    const dataRows = Object.keys(selectedSizeGuide.data).map(size => {
+                        const values = selectedSizeGuide.data[size];
+                        const cells = values.map(value => `<td class="border px-2 py-1 text-sm">${value}</td>`).join('');
+                        return `<tr><td class="border px-2 py-1 text-sm font-semibold">${size}</td>${cells}</tr>`;
+                    }).join('');
+
+                    sizeGuideHtml = `
+                        <div class="mb-6">
+                            <h4 class="font-bold mb-2">Guía de Tallas (Medidas del Cuerpo en cm):</h4>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left border-collapse text-sm">
+                                    <thead><tr>${headerRow}</tr></thead>
+                                    <tbody>${dataRows}</tbody>
+                                </table>
+                            </div>
+                            ${selectedSizeGuide.note ? `<p class="text-xs text-gray-600 mt-2">${selectedSizeGuide.note}</p>` : ''}
+                        </div>
+                    `;
+                }
+
                 productModalContent.innerHTML = `
                     <div class="flex flex-col md:flex-row h-full">
                         <div class="md:w-1/2 h-1/2 md:h-full bg-cover bg-center" style="background-image: url('${product.image}')"></div>
@@ -503,49 +586,8 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Sección de medidas internacionales de talla -->
-                                <div class="mb-6">
-                                    <h4 class="font-bold mb-2">Guía de Tallas (Medidas del Cuerpo en cm):</h4>
-                                    <div class="overflow-x-auto">
-                                        <table class="w-full text-left border-collapse">
-                                            <thead>
-                                                <tr>
-                                                    <th class="border px-4 py-2 bg-gray-100">Talla</th>
-                                                    <th class="border px-4 py-2 bg-gray-100">Pecho (cm)</th>
-                                                    <th class="border px-4 py-2 bg-gray-100">Cintura (cm)</th>
-                                                    <th class="border px-4 py-2 bg-gray-100">Cadera (cm)</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="border px-4 py-2">S</td>
-                                                    <td class="border px-4 py-2">88-92</td>
-                                                    <td class="border px-4 py-2">72-76</td>
-                                                    <td class="border px-4 py-2">94-98</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border px-4 py-2">M</td>
-                                                    <td class="border px-4 py-2">96-100</td>
-                                                    <td class="border px-4 py-2">80-84</td>
-                                                    <td class="border px-4 py-2">102-106</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border px-4 py-2">L</td>
-                                                    <td class="border px-4 py-2">104-108</td>
-                                                    <td class="border px-4 py-2">88-92</td>
-                                                    <td class="border px-4 py-2">110-114</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="border px-4 py-2">XL</td>
-                                                    <td class="border px-4 py-2">112-116</td>
-                                                    <td class="border px-4 py-2">96-100</td>
-                                                    <td class="border px-4 py-2">118-122</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <p class="text-sm text-gray-600 mt-2">*Nota: Medidas del cuerpo. Las tallas pueden variar ligeramente.</p>
-                                </div>
+                                <!-- Sección de medidas internacionales de talla inyectada dinámicamente -->
+                                ${sizeGuideHtml}
                                 <!-- Fin de la sección de medidas internacionales de talla -->
 
                             </div>
