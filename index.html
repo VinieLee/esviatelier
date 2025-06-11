@@ -919,14 +919,16 @@
                         payment: appState.paymentInfo
                     };
 
+                    // Crear FormData para enviar los datos de manera compatible con Apps Script en no-cors
+                    const formData = new FormData();
+                    formData.append('data', JSON.stringify(orderData)); // Empaquetar el JSON en un parámetro 'data'
+
                     try {
                         const response = await fetch(GOOGLE_APPS_SCRIPT_WEB_APP_URL, {
                             method: 'POST',
                             mode: 'no-cors', // Importante para Apps Script. No-cors para evitar errores de CORS.
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(orderData)
+                            // No se establece 'Content-Type' aquí; FormData lo hace automáticamente.
+                            body: formData // Usar FormData para el cuerpo de la solicitud
                         });
                         // Aunque 'no-cors' no permite leer la respuesta, la solicitud se envía.
                         console.log('Pedido enviado a Google Apps Script (respuesta no legible por no-cors).');
