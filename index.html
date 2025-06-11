@@ -283,7 +283,7 @@
         document.addEventListener('DOMContentLoaded', () => {
 
             // ! IMPORTANTE: REEMPLAZA ESTA URL CON LA URL DE TU WEB APP DE GOOGLE APPS SCRIPT !
-            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'TU_URL_DE_GOOGL_APPS_SCRIPT_AQUI';
+            const GOOGLE_APPS_SCRIPT_WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbzMA7X8bEPiCRhkWNzgrGPjGDw-6kzY0IAowNHeRk77UENewVlz0O50Y23i8j-GKaYkVQ/exec';
 
             const appState = {
                 products: [],
@@ -687,7 +687,7 @@
                                     <div class="flex justify-between"><span class="text-gray-600">Subtotal</span><span>S/ ${subtotal.toFixed(2)}</span></div>
                                     <div class="flex justify-between"><span class="text-gray-600">${appState.checkoutShippingMethod === 'delivery' ? 'Envío' : 'Recogida en tienda'}</span><span>S/ ${shippingCost.toFixed(2)}</span></div>
                                 </div>
-                                <div class="flex justify-between font-bold text-lg mb-6"><span >Total a Pagar</span><span>S/ ${total.toFixed(2)}</span></div>
+                                <div class="flex justify-between font-bold text-lg mb-6"><span >Total</span><span>S/ ${total.toFixed(2)}</span></div>
                                 <button id="to-payment-btn" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar al Pago</button>
                             </div>
                         </div>
@@ -727,7 +727,7 @@
                                         <span class="font-semibold">BCP: 123-456789-0-12</span><br>
                                         <span class="font-semibold">BBVA: 001-123-000456789</span><br>
                                         <span class="font-semibold">Interbank: 890-1234567890</span><br>
-                                        <span class="text-red-500 font-semibold">¡IMPORTANTE!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
+                                        <span class="text-red-500 font-semibold">¡IMPORTANTEl!</span> Envía la captura de pantalla de tu pago y los detalles del pedido a nuestro correo: <a href="mailto:viniesilva29@gmail.com?subject=${emailSubject}&body=${emailBody}" class="accent-color-text hover:underline font-semibold">viniesilva29@gmail.com</a>
                                     </p>
                                     <div class="mt-4 ml-6 space-y-2">
                                         <input type="text" id="payment-number-transferencia" placeholder="Número de operación/pago" value="${appState.paymentInfo.paymentNumber}" class="w-full p-2 border rounded-lg">
