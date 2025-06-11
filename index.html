@@ -306,7 +306,6 @@
                     city: '',
                     zipCode: '',
                     phone: '',
-                    dni: '', // Added DNI
                     pickupName: '',
                     pickupEmail: ''
                 },
@@ -352,7 +351,7 @@
             const closeCartBtn = document.getElementById('close-cart-btn');
             const cartItemsContainer = document.getElementById('cart-items-container');
             const cartSubtotalEl = document.getElementById('cart-subtotal');
-            const cartCountEl = document.getElementById('cart-count');
+            const cartCountEl = document = document.getElementById('cart-count');
 
             const checkoutBtn = document.getElementById('checkout-btn');
             const checkoutModal = document.getElementById('checkout-modal');
@@ -460,7 +459,6 @@
                 const product = appState.products.find(p => p.id == productId);
                 if (!product) return;
 
-                // Modificación: se elimina el `required` del campo de color y se ajusta la lógica.
                 productModalContent.innerHTML = `
                     <div class="flex flex-col md:flex-row h-full">
                         <div class="md:w-1/2 h-1/2 md:h-full bg-cover bg-center" style="background-image: url('${product.image}')"></div>
@@ -479,14 +477,12 @@
                                         ${product.sizes.map(size => `<label><input type="radio" name="size" value="${size}" class="sr-only peer"><span class="px-4 py-2 border rounded-lg cursor-pointer peer-checked:bg-gray-800 peer-checked:text-white">${size}</span></label>`).join('')}
                                     </div>
                                 </div>
-                                ${product.colors && product.colors.length > 0 ? `
                                 <div class="mb-6">
                                     <h4 class="font-bold mb-2">Color:</h4>
                                      <div class="flex flex-wrap gap-3">
                                         ${product.colors.map(color => `<label><input type="radio" name="color" value="${color}" class="sr-only peer"><span class="h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-800 block cursor-pointer" style="background-color: ${color.toLowerCase() === 'blanco' ? 'white' : color.toLowerCase()}; border-color: ${color.toLowerCase() === 'blanco' ? '#ccc' : 'transparent'};"></span></label>`).join('')}
                                     </div>
                                 </div>
-                                ` : ''}
                             </div>
                             <div class="mt-auto">
                                 <button data-product-id="${product.id}" class="add-to-cart-btn w-full text-white p-3 rounded-lg accent-color hover:opacity-90 transition-opacity">
@@ -507,19 +503,16 @@
 
                 document.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
                     const selectedSize = document.querySelector('input[name="size"]:checked');
-                    // Eliminado el 'required' para el color al añadir al carrito
                     const selectedColor = document.querySelector('input[name="color"]:checked');
-
-                    if (!selectedSize) { // Solo se valida la talla
+                    if (!selectedSize || !selectedColor) {
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
-                        messageBox.textContent = 'Por favor, selecciona una talla.';
+                        messageBox.textContent = 'Por favor, selecciona talla y color.';
                         e.target.parentNode.insertBefore(messageBox, e.target);
                         setTimeout(() => messageBox.remove(), 3000);
                         return;
                     }
-                    // Si no se selecciona color, se envía 'No especificado'
-                    addToCart(product.id, selectedSize.value, selectedColor ? selectedColor.value : 'No especificado');
+                    addToCart(product.id, selectedSize.value, selectedColor.value);
                     productModal.classList.add('opacity-0', 'pointer-events-none');
                     productModalContent.classList.add('scale-95');
                     openCartPanel();
@@ -543,7 +536,7 @@
                             <img src="${product.image}" alt="${product.name}" class="w-20 h-24 object-cover rounded-lg">
                             <div class="flex-grow">
                                 <h4 class="font-bold">${product.name}</h4>
-                                <p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p>
+                                <p class="text-sm text-gray-500">Talla: ${item.size}, Color: ${item.color}</p>
                                 <p class="font-bold text-lg">S/ ${(product.price * item.quantity).toFixed(2)}</p>
                             </div>
                             <div class="flex flex-col items-center justify-between">
@@ -633,7 +626,6 @@
                                             <input type="text" id="shipping-zipCode" placeholder="Código Postal" value="${appState.customerInfo.zipCode}" class="w-full p-3 border rounded-lg">
                                         </div>
                                         <input type="tel" id="shipping-phone" placeholder="Teléfono" value="${appState.customerInfo.phone}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     ` : `
                                     <div class="space-y-4">
@@ -642,7 +634,6 @@
                                         <p class="text-sm text-gray-600">Te enviaremos un correo cuando tu pedido esté listo para recoger.</p>
                                         <input type="text" id="pickup-name" placeholder="Nombre completo para recoger" value="${appState.customerInfo.pickupName}" class="w-full p-3 border rounded-lg" required>
                                         <input type="email" id="pickup-email" placeholder="Correo electrónico de contacto" value="${appState.customerInfo.pickupEmail}" class="w-full p-3 border rounded-lg" required>
-                                        <input type="text" id="customer-dni" placeholder="DNI" value="${appState.customerInfo.dni}" class="w-full p-3 border rounded-lg" required>
                                     </div>
                                     `}
                                     <button type="submit" class="w-full mt-6 text-white p-3 rounded-lg accent-color hover:opacity-90">Continuar a Revisión</button>
@@ -675,10 +666,10 @@
                                 <div class="bg-gray-50 p-6 rounded-lg mb-6">
                                     <h3 class="font-bold mb-2">${appState.checkoutShippingMethod === 'delivery' ? 'Dirección de Envío' : 'Método de Recogida'}</h3>
                                     ${appState.checkoutShippingMethod === 'delivery' ? `
-                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>DNI: ${appState.customerInfo.dni}<br>Teléfono: ${appState.customerInfo.phone}</p>
+                                        <p class="text-gray-600">${appState.customerInfo.fullName}<br>${appState.customerInfo.address}<br>${appState.customerInfo.city}, ${appState.customerInfo.zipCode}<br>Teléfono: ${appState.customerInfo.phone}</p>
                                     ` : `
                                         <p class="text-gray-600">Recogida en tienda: Esvi Atelier<br>Av. Principal 123, Miraflores, Lima.</p>
-                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}<br>DNI: ${appState.customerInfo.dni}</p>
+                                        <p class="text-gray-600">A nombre de: ${appState.customerInfo.pickupName}</p>
                                     `}
                                     <button class="text-sm accent-color-text mt-2" onclick="window.renderCheckout(1)">Editar</button>
                                 </div>
@@ -686,7 +677,7 @@
                                  <div class="space-y-4">
                                     ${appState.cart.map(item => {
                                         const product = appState.products.find(p => p.id === item.id);
-                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
+                                        return `<div class="flex gap-4"><img src="${product.image}" class="w-16 h-20 rounded-md object-cover"><div class="flex-grow"><p class="font-bold">${product.name}</p><p class="text-sm text-gray-500">${item.size}, ${item.color}</p><p class="text-sm text-gray-500">Cantidad: ${item.quantity}</p></div><p>S/ ${(product.price * item.quantity).toFixed(2)}</p></div>`;
                                     }).join('')}
                                 </div>
                             </div>
@@ -704,7 +695,7 @@
                 } else if (step === 3) { // Pago
                     const productDescriptions = appState.cart.map(item => {
                         const product = appState.products.find(p => p.id === item.id);
-                        return `${item.quantity} x ${product.name} (Talla: ${item.size}${item.color !== 'No especificado' ? `, Color: ${item.color}` : ''}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
+                        return `${item.quantity} x ${product.name} (Talla: ${item.size}, Color: ${item.color}) - S/ ${(product.price * item.quantity).toFixed(2)}`;
                     }).join(', ');
 
                     const emailSubject = encodeURIComponent(`Comprobante de Pago Pedido Esvi Atelier - Total S/ ${total.toFixed(2)}`);
@@ -776,11 +767,9 @@
                         appState.customerInfo.city = document.getElementById('shipping-city').value;
                         appState.customerInfo.zipCode = document.getElementById('shipping-zipCode').value;
                         appState.customerInfo.phone = document.getElementById('shipping-phone').value;
-                        appState.customerInfo.dni = document.getElementById('customer-dni').value; // Capture DNI
                     } else {
                         appState.customerInfo.pickupName = document.getElementById('pickup-name').value;
                         appState.customerInfo.pickupEmail = document.getElementById('pickup-email').value;
-                        appState.customerInfo.dni = document.getElementById('customer-dni').value; // Capture DNI for pickup
                     }
                     renderCheckout(2);
                 });
@@ -794,27 +783,15 @@
                 
                 document.getElementById('to-payment-btn')?.addEventListener('click', () => renderCheckout(3));
 
-                document.getElementById('finish-order-btn')?.addEventListener('click', async (event) => { // Added 'event' parameter
-                    const finishOrderBtn = event.target; // Get a reference to the button
-                    
-                    // Disable the button and change its text to prevent multiple clicks
-                    finishOrderBtn.disabled = true;
-                    finishOrderBtn.textContent = 'Procesando pedido...';
-                    finishOrderBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
+                document.getElementById('finish-order-btn')?.addEventListener('click', async () => {
                     // Recolectar datos de pago antes de enviar
                     const selectedPaymentMethodRadio = document.querySelector('input[name="payment"]:checked');
                     if (!selectedPaymentMethodRadio) {
                         const messageBox = document.createElement('p');
                         messageBox.className = 'text-red-500 text-sm mt-2 text-center';
                         messageBox.textContent = 'Por favor, selecciona un método de pago.';
-                        finishOrderBtn.parentNode.insertBefore(messageBox, finishOrderBtn);
+                        document.getElementById('finish-order-btn').parentNode.insertBefore(messageBox, document.getElementById('finish-order-btn'));
                         setTimeout(() => messageBox.remove(), 3000);
-                        
-                        // Re-enable button if validation fails
-                        finishOrderBtn.disabled = false;
-                        finishOrderBtn.textContent = 'Finalizar Pedido';
-                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         return;
                     }
 
@@ -876,13 +853,8 @@
                         const errorMessage = document.createElement('p');
                         errorMessage.className = 'text-red-500 text-sm mt-2 text-center';
                         errorMessage.textContent = 'Hubo un error al registrar tu pedido. Intenta de nuevo.';
-                        finishOrderBtn.parentNode.insertBefore(errorMessage, finishOrderBtn);
+                        document.getElementById('finish-order-btn').parentNode.insertBefore(errorMessage, document.getElementById('finish-order-btn'));
                         setTimeout(() => errorMessage.remove(), 5000);
-                        
-                        // Re-enable button on error
-                        finishOrderBtn.disabled = false;
-                        finishOrderBtn.textContent = 'Finalizar Pedido';
-                        finishOrderBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                         return; // Detener el flujo si hay un error de envío
                     }
 
@@ -890,10 +862,6 @@
                     appState.cart = [];
                     renderCart();
                     renderCheckout(4);
-
-                    // No re-habilitar el botón aquí si el pedido fue exitoso y se pasa al paso de confirmación.
-                    // Si el usuario regresa y quiere hacer otro pedido, el botón de "Proceder al Pago"
-                    // ya estará disponible si el carrito no está vacío.
                 });
                 
                 document.getElementById('back-to-shop-btn')?.addEventListener('click', () => {
